@@ -7,10 +7,11 @@ import { AuthGate } from './AuthGate';
 // Remover import do Map do topo
 
 interface Player {
+  id: number;
   name: string;
-  x: number;
-  y: number;
-  z: number;
+  localizacao_x: number;
+  localizacao_y: number;
+  localizacao_z: number;
 }
 
 export function HomeDashboard() {
@@ -43,7 +44,13 @@ export function HomeDashboard() {
     const fetchPlayers = () => {
       fetch('/api/players')
         .then(res => res.json())
-        .then(data => setPlayers(data.players || []));
+        .then(data => setPlayers((data.players || []).map((p: any) => ({
+          id: p.id || 0,
+          name: p.name,
+          localizacao_x: p.x || 0,
+          localizacao_y: p.y || 0,
+          localizacao_z: p.z || 0,
+        }))));
     };
     fetchPlayers();
     const interval = setInterval(fetchPlayers, 5000);
@@ -81,9 +88,9 @@ export function HomeDashboard() {
                     {players.map((player, idx) => (
                       <tr key={idx}>
                         <td>{player.name}</td>
-                        <td>{player.x}</td>
-                        <td>{player.y}</td>
-                        <td>{player.z}</td>
+                        <td>{player.localizacao_x}</td>
+                        <td>{player.localizacao_y}</td>
+                        <td>{player.localizacao_z}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -99,7 +106,7 @@ export function HomeDashboard() {
               </Suspense>
             )}
             {isClient && players.map((player, idx) => (
-              <PlayerMarker key={idx} name={player.name} x={player.x} y={player.y} />
+              <PlayerMarker key={idx} name={player.name} x={player.localizacao_x} y={player.localizacao_y} />
             ))}
             <SpawnModal isOpen={spawnModal.open} coords={spawnModal.coords} onClose={() => setSpawnModal({ open: false, coords: null })} onSpawn={handleSpawn} />
           </div>

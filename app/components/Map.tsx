@@ -3,6 +3,7 @@ import { MapContainer, ImageOverlay, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { ReactNode } from 'react';
+import { PlayerMarker } from './PlayerMarker';
 
 const MAP_BOUNDS: [[number, number], [number, number]] = [
   [0, 0], // top-left
@@ -18,12 +19,12 @@ function MapClickHandler({ onClick }: { onClick: (coords: L.LatLng) => void }) {
   return null;
 }
 
-
 interface Player {
+  id: number;
   name: string;
-  x: number;
-  y: number;
-  z: number;
+  localizacao_x: number;
+  localizacao_y: number;
+  localizacao_z: number;
 }
 
 interface MapProps {
@@ -32,20 +33,23 @@ interface MapProps {
   players?: Player[];
 }
 
-export default function Map({ children, onMapClick }: MapProps) {
+export default function Map({ children, onMapClick, players = [] }: MapProps) {
   return (
     <MapContainer
       crs={L.CRS.Simple}
       bounds={MAP_BOUNDS}
       minZoom={-2}
       maxZoom={2}
-      style={{ height: '100%', width: '100%' }}
+      style={{ height: '600px', width: '100%' }}
     >
       <ImageOverlay
         url="/map/palworld-map.png"
         bounds={MAP_BOUNDS}
       />
       {onMapClick && <MapClickHandler onClick={onMapClick} />}
+      {players.map(player => (
+        <PlayerMarker key={player.id} name={player.name} x={player.localizacao_x} y={player.localizacao_y} />
+      ))}
       {children}
     </MapContainer>
   );

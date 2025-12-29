@@ -1,24 +1,38 @@
-import React from "react";
-import { getMapData } from "../../services/palworldMapApiClient";
+"use client";
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default async function MapaPage() {
-  let mapData: any = null;
-  let error = "";
-  try {
-    mapData = await getMapData();
-  } catch (e: any) {
-    error = e.message || "Erro ao buscar dados do mapa.";
-  }
+const Map = dynamic(() => import('../components/Map'), { ssr: false });
+
+interface Player {
+  id: number;
+  name: string;
+  localizacao_x: number;
+  localizacao_y: number;
+  localizacao_z: number;
+}
+
+export default function MapaPage() {
+  const [players, setPlayers] = useState<Player[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("palworld_auth")) {
+      router.push("/login");
+    }
+    // Simulação de buscar jogadores
+    const mockPlayers: Player[] = [
+      { id: 1, name: "Player1", localizacao_x: 100, localizacao_y: 200, localizacao_z: 0 },
+      { id: 2, name: "Player2", localizacao_x: 150, localizacao_y: 250, localizacao_z: 0 },
+    ];
+    setPlayers(mockPlayers);
+  }, [router]);
+
   return (
-    <div className="container" style={{ maxWidth: 1000, margin: "40px auto" }}>
+    <div className="container" style={{ maxWidth: 1200, margin: "40px auto" }}>
       <h2>Mapa Interativo</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
-      {!mapData && !error && <p>Nenhum dado de mapa encontrado.</p>}
-      {mapData && (
-        <pre style={{ background: "#222", color: "#fff", padding: 16, borderRadius: 8 }}>
-          {JSON.stringify(mapData, null, 2)}
-        </pre>
-      )}
+      <Map players={players} />
     </div>
   );
 }

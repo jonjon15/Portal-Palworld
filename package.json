@@ -20,4 +20,10 @@
     "@types/react-leaflet": "^2.8.3",
     "typescript": "^5.9.3"
   }
+  ,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  }
 }

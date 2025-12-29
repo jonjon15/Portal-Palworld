@@ -18,9 +18,18 @@ function MapClickHandler({ onClick }: { onClick: (coords: L.LatLng) => void }) {
   return null;
 }
 
+
+interface Player {
+  name: string;
+  x: number;
+  y: number;
+  z: number;
+}
+
 interface MapProps {
   children?: ReactNode;
   onMapClick?: (coords: L.LatLng) => void;
+  players?: Player[];
 }
 
 export default function Map({ children, onMapClick }: MapProps) {

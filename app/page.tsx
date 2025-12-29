@@ -1,3 +1,5 @@
+"use client";
+
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { PlayerMarker } from './components/PlayerMarker';
@@ -96,9 +98,9 @@ export default function HomePage() {
           </div>
           <Map onMapClick={handleMapClick} players={players} />
           {players.map((player, idx) => (
-            <PlayerMarker key={idx} player={player} />
+            <PlayerMarker key={idx} name={player.name} x={player.x} y={player.y} />
           ))}
-          <SpawnModal open={spawnModal.open} coords={spawnModal.coords} onClose={() => setSpawnModal({ open: false, coords: null })} onSpawn={handleSpawn} />
+          <SpawnModal isOpen={spawnModal.open} coords={spawnModal.coords} onClose={() => setSpawnModal({ open: false, coords: null })} onSpawn={handleSpawn} />
         </div>
       </div>
     </main>

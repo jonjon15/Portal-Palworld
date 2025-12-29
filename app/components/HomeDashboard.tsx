@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState, Suspense } from 'react';
-import { PlayerMarker } from './PlayerMarker';
+// import { PlayerMarker } from './PlayerMarker'; // Removido - PlayerMarker deve ser usado apenas dentro do Map
 import { SpawnModal } from './SpawnModal';
 import { AuthGate } from './AuthGate';
 
@@ -105,9 +105,7 @@ export function HomeDashboard() {
                 })()}
               </Suspense>
             )}
-            {isClient && players.map((player, idx) => (
-              <PlayerMarker key={idx} name={player.name} x={player.localizacao_x} y={player.localizacao_y} />
-            ))}
+            {/* Removido: PlayerMarker deve ser renderizado dentro do Map */}
             <SpawnModal isOpen={spawnModal.open} coords={spawnModal.coords} onClose={() => setSpawnModal({ open: false, coords: null })} onSpawn={handleSpawn} />
           </div>
         </div>

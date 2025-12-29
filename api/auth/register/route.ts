@@ -5,6 +5,7 @@ const { PrismaClient } = require('../../../src/generated/client');
 const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
+  const prisma = new PrismaClient();
   try {
     const { username, password } = await request.json();
 
@@ -36,5 +37,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Erro ao registrar usuário:', error);
     return NextResponse.json({ error: 'Erro interno do servidor.' }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
   }
 }

@@ -12,7 +12,14 @@ export async function POST(request: NextRequest) {
     console.log('Tentando registrar usuário:', username);
 
     if (!username || !password) {
-      return NextResponse.json({ error: 'Usuário e senha são obrigatórios.' }, { status: 400 });
+      return NextResponse.json({ error: 'Usuário e senha são obrigatórios.' }, { 
+        status: 400,
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      });
     }
 
     // Verificar se usuário já existe
@@ -22,7 +29,14 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       console.log('Usuário já existe:', username);
-      return NextResponse.json({ error: 'Usuário já existe.' }, { status: 400 });
+      return NextResponse.json({ error: 'Usuário já existe.' }, { 
+        status: 400,
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      });
     }
 
     // Hash da senha
@@ -37,10 +51,24 @@ export async function POST(request: NextRequest) {
     });
 
     console.log('Usuário criado com sucesso:', user.id);
-    return NextResponse.json({ message: 'Usuário criado com sucesso.', userId: user.id }, { status: 201 });
+    return NextResponse.json({ message: 'Usuário criado com sucesso.', userId: user.id }, { 
+      status: 201,
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error) {
     console.error('Erro ao registrar usuário:', error);
-    return NextResponse.json({ error: 'Erro interno do servidor.' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro interno do servidor.' }, { 
+      status: 500,
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } finally {
     await prisma.$disconnect();
   }

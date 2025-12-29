@@ -12,12 +12,23 @@ interface Player {
   z: number;
 }
 
+import { useRouter } from 'next/navigation';
+
 export default function HomePage() {
   const [serverName, setServerName] = useState('');
   const [players, setPlayers] = useState<Player[]>([]);
   const [spawnModal, setSpawnModal] = useState<{ open: boolean; coords: { x: number; y: number; z: number } | null }>({ open: false, coords: null });
+  const router = useRouter();
 
   useEffect(() => {
+    // Verifica autenticação
+    if (typeof window !== 'undefined') {
+      const isAuth = localStorage.getItem('palworld_auth');
+      if (!isAuth) {
+        router.push('/login');
+        return;
+      }
+    }
     fetch('/api/server/info')
       .then(res => res.json())
       .then(data => setServerName(data.serverName || 'Servidor Palworld'));
@@ -29,7 +40,7 @@ export default function HomePage() {
     fetchPlayers();
     const interval = setInterval(fetchPlayers, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [router]);
 
   const handleMapClick = (coords: { lat: number; lng: number }) => {
     setSpawnModal({ open: true, coords: { x: coords.lng, y: coords.lat, z: 0 } });
@@ -50,17 +61,45 @@ export default function HomePage() {
         {serverName}
       </header>
       <div className="flex-1 relative">
-        <Map onMapClick={handleMapClick}>
-          {players.map(player => (
-            <PlayerMarker key={player.name} name={player.name} x={player.x} y={player.y} />
+        <div className="container" style={{ maxWidth: 1200, margin: "40px auto" }}>
+          <h2>Dashboard</h2>
+          <div className="mb-4">
+            <strong>Servidor:</strong> {serverName}<br />
+            <strong>Jogadores online:</strong> {players.length}
+          </div>
+          <div className="mb-4">
+            <h4>Jogadores</h4>
+            {players.length === 0 ? (
+              <p>Nenhum jogador online.</p>
+            ) : (
+              <table className="table table-dark table-striped">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>Z</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {players.map((player, idx) => (
+                    <tr key={idx}>
+                      <td>{player.name}</td>
+                      <td>{player.x}</td>
+                      <td>{player.y}</td>
+                      <td>{player.z}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+          <Map onMapClick={handleMapClick} players={players} />
+          {players.map((player, idx) => (
+            <PlayerMarker key={idx} player={player} />
           ))}
-        </Map>
-        <SpawnModal
-          isOpen={spawnModal.open}
-          onClose={() => setSpawnModal({ open: false, coords: null })}
-          onSpawn={handleSpawn}
-          coords={spawnModal.coords}
-        />
+          <SpawnModal open={spawnModal.open} coords={spawnModal.coords} onClose={() => setSpawnModal({ open: false, coords: null })} onSpawn={handleSpawn} />
+        </div>
       </div>
     </main>
   );

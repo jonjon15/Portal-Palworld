@@ -18,6 +18,10 @@ export default function LoginPage() {
     // Simulação de login
     if (username === "admin" && password === "admin") {
       setError("");
+      // Salva autenticação simples no localStorage
+      if (typeof window !== "undefined") {
+        localStorage.setItem("palworld_auth", "true");
+      }
       router.push("/");
     } else {
       setError("Usuário ou senha inválidos.");

@@ -3,21 +3,27 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !password) {
-      setError("Usuário e senha são obrigatórios.");
+    if (!username || !password || !confirmPassword) {
+      setError("Todos os campos são obrigatórios.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("As senhas não coincidem.");
       return;
     }
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,24 +34,24 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Salva autenticação no localStorage
-        if (typeof window !== "undefined") {
-          localStorage.setItem("palworld_auth", "true");
-          localStorage.setItem("userId", data.userId);
-        }
-        router.push("/");
+        setSuccess("Usuário criado com sucesso! Redirecionando para login...");
+        setError("");
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
       } else {
         setError(data.error);
       }
     } catch (error) {
-      setError("Erro ao fazer login.");
+      setError("Erro ao registrar.");
     }
   };
 
   return (
     <div className="container" style={{ maxWidth: 400, margin: "60px auto" }}>
-      <h2>Login</h2>
+      <h2>Cadastro</h2>
       {error && <div className="alert alert-danger">{error}</div>}
+      {success && <div className="alert alert-success">{success}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="username" className="form-label">Usuário</label>
@@ -66,13 +72,24 @@ export default function LoginPage() {
             id="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            autoComplete="current-password"
+            autoComplete="new-password"
           />
         </div>
-        <button type="submit" className="btn btn-primary w-100">Entrar</button>
+        <div className="mb-3">
+          <label htmlFor="confirmPassword" className="form-label">Confirmar Senha</label>
+          <input
+            type="password"
+            className="form-control"
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            autoComplete="new-password"
+          />
+        </div>
+        <button type="submit" className="btn btn-primary w-100">Cadastrar</button>
       </form>
       <div className="mt-3 text-center">
-        <Link href="/register">Não tem conta? Cadastre-se</Link>
+        <Link href="/login">Já tem conta? Faça login</Link>
       </div>
     </div>
   );

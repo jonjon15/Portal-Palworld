@@ -7,6 +7,10 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
   try {
+    console.log('Tentando conectar ao banco...');
+    await prisma.$connect();
+    console.log('Conectado ao banco com sucesso');
+
     const { username, password } = await request.json();
 
     console.log('Tentando registrar usuário:', username);

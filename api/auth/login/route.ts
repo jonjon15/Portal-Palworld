@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { PrismaClient } from '../../../../generated/prisma';
+const { PrismaClient } = require('../../../src/generated/client');
 
 const prisma = new PrismaClient();
 

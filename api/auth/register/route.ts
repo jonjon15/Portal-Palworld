@@ -9,6 +9,8 @@ export async function POST(request: NextRequest) {
   try {
     const { username, password } = await request.json();
 
+    console.log('Tentando registrar usuário:', username);
+
     if (!username || !password) {
       return NextResponse.json({ error: 'Usuário e senha são obrigatórios.' }, { status: 400 });
     }
@@ -19,6 +21,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingUser) {
+      console.log('Usuário já existe:', username);
       return NextResponse.json({ error: 'Usuário já existe.' }, { status: 400 });
     }
 
@@ -33,6 +36,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    console.log('Usuário criado com sucesso:', user.id);
     return NextResponse.json({ message: 'Usuário criado com sucesso.', userId: user.id }, { status: 201 });
   } catch (error) {
     console.error('Erro ao registrar usuário:', error);

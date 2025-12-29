@@ -11,7 +11,8 @@ export async function POST(request: NextRequest) {
     await prisma.$connect();
     console.log('Conectado ao banco com sucesso');
 
-    const { username, password } = await request.json();
+    const body = await request.json() as { username: string; password: string };
+    const { username, password } = body;
 
     console.log('Tentando registrar usuário:', username);
 

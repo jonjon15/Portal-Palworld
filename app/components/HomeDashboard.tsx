@@ -3,16 +3,9 @@ import React, { useEffect, useState, Suspense } from 'react';
 // import { PlayerMarker } from './PlayerMarker'; // Removido - PlayerMarker deve ser usado apenas dentro do Map
 import { SpawnModal } from './SpawnModal';
 import { AuthGate } from './AuthGate';
+import { Player } from '../../types/palworld';
 
 // Remover import do Map do topo
-
-interface Player {
-  id: number;
-  name: string;
-  localizacao_x: number;
-  localizacao_y: number;
-  localizacao_z: number;
-}
 
 export function HomeDashboard() {
   const [serverName, setServerName] = useState('');
@@ -44,7 +37,14 @@ export function HomeDashboard() {
         // Recarregar jogadores após sincronização
         const playersResponse = await fetch('/api/players');
         const playersData = await playersResponse.json();
-        setPlayers(playersData.players || []);
+        setPlayers((playersData.players || []).map((p: any, index: number) => ({
+          id: p.id || index + 1,
+          name: p.name || 'Unknown',
+          x: p.x || p.localizacao_x || 0,
+          y: p.y || p.localizacao_y || 0,
+          z: p.z || p.localizacao_z || 0,
+          steam_id: p.steamId || p.steam_id || ''
+        })));
         setLastSync(new Date().toLocaleString('pt-BR'));
         alert(`✅ ${data.message}`);
       } else {
@@ -74,12 +74,13 @@ export function HomeDashboard() {
     const fetchPlayers = () => {
       fetch('/api/players')
         .then(res => res.json())
-        .then(data => setPlayers((data.players || []).map((p: any) => ({
-          id: p.id || 0,
-          name: p.name,
-          localizacao_x: p.x || 0,
-          localizacao_y: p.y || 0,
-          localizacao_z: p.z || 0,
+        .then(data => setPlayers((data.players || []).map((p: any, index: number) => ({
+          id: p.id || index + 1,
+          name: p.name || 'Unknown',
+          x: p.x || p.localizacao_x || 0,
+          y: p.y || p.localizacao_y || 0,
+          z: p.z || p.localizacao_z || 0,
+          steam_id: p.steamId || p.steam_id || ''
         }))));
     };
     fetchPlayers();
@@ -134,9 +135,9 @@ export function HomeDashboard() {
                     {players.map((player, idx) => (
                       <tr key={idx}>
                         <td>{player.name}</td>
-                        <td>{player.localizacao_x}</td>
-                        <td>{player.localizacao_y}</td>
-                        <td>{player.localizacao_z}</td>
+                        <td>{player.x}</td>
+                        <td>{player.y}</td>
+                        <td>{player.z}</td>
                       </tr>
                     ))}
                   </tbody>

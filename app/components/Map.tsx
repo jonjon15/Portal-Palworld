@@ -2,8 +2,9 @@
 import { MapContainer, ImageOverlay, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { ReactNode } from 'react';
+import { ReactNode, forwardRef } from 'react';
 import { PlayerMarker } from './PlayerMarker';
+import { Player } from '../../types/palworld';
 
 const MAP_BOUNDS: [[number, number], [number, number]] = [
   [0, 0], // top-left
@@ -19,23 +20,17 @@ function MapClickHandler({ onClick }: { onClick: (coords: L.LatLng) => void }) {
   return null;
 }
 
-interface Player {
-  id: number;
-  name: string;
-  localizacao_x: number;
-  localizacao_y: number;
-  localizacao_z: number;
-}
-
 interface MapProps {
   children?: ReactNode;
   onMapClick?: (coords: L.LatLng) => void;
+  onPlayerClick?: (player: Player) => void;
   players?: Player[];
 }
 
-export default function Map({ children, onMapClick, players = [] }: MapProps) {
+const Map = forwardRef<L.Map, MapProps>(({ children, onMapClick, onPlayerClick, players = [] }, ref) => {
   return (
     <MapContainer
+      ref={ref}
       crs={L.CRS.Simple}
       bounds={MAP_BOUNDS}
       minZoom={-2}
@@ -48,9 +43,13 @@ export default function Map({ children, onMapClick, players = [] }: MapProps) {
       />
       {onMapClick && <MapClickHandler onClick={onMapClick} />}
       {players.map(player => (
-        <PlayerMarker key={player.id} name={player.name} x={player.localizacao_x} y={player.localizacao_y} />
+        <PlayerMarker key={player.id} player={player} onClick={onPlayerClick} />
       ))}
       {children}
     </MapContainer>
   );
-}
+});
+
+Map.displayName = 'Map';
+
+export default Map;

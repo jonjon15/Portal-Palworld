@@ -16,9 +16,10 @@ export interface Server {
 }
 
 export interface Player {
+  id: number;
   name: string;
   x: number;
   y: number;
   z: number;
-  // ...outros campos conforme resposta da API
+  steam_id?: string;
 }

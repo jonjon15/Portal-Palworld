@@ -1,10 +1,10 @@
 import { Marker, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
+import { Player } from '../../types/palworld';
 
 interface PlayerMarkerProps {
-  name: string;
-  x: number;
-  y: number;
+  player: Player;
+  onClick?: (player: Player) => void;
 }
 
 const playerIcon = new L.Icon({
@@ -13,10 +13,16 @@ const playerIcon = new L.Icon({
   iconAnchor: [16, 32],
 });
 
-export function PlayerMarker({ name, x, y }: PlayerMarkerProps) {
+export function PlayerMarker({ player, onClick }: PlayerMarkerProps) {
   return (
-    <Marker position={[y, x]} icon={playerIcon}>
-      <Tooltip>{name}</Tooltip>
+    <Marker
+      position={[player.y, player.x]}
+      icon={playerIcon}
+      eventHandlers={{
+        click: () => onClick && onClick(player),
+      }}
+    >
+      <Tooltip>{player.name}</Tooltip>
     </Marker>
   );
 }

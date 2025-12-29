@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { palworldApiClient } from '../../services/palworldApiClient';
-import type { ServerInfo } from '@/types/palworld';
+import type { ServerInfo } from '../../types/palworld';
 
 export async function GET(req: NextRequest) {
   try {

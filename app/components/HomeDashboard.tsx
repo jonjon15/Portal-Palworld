@@ -19,6 +19,8 @@ export function HomeDashboard() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [spawnModal, setSpawnModal] = useState<{ open: boolean; coords: { x: number; y: number; z: number } | null }>({ open: false, coords: null });
   const [isClient, setIsClient] = useState(false);
+  const [syncLoading, setSyncLoading] = useState(false);
+  const [lastSync, setLastSync] = useState<string>('');
 
   useEffect(() => {
     setIsClient(true);
@@ -26,6 +28,34 @@ export function HomeDashboard() {
 
   const handleMapClick = (coords: { lat: number; lng: number }) => {
     setSpawnModal({ open: true, coords: { x: coords.lng, y: coords.lat, z: 0 } });
+  };
+
+  const syncPlayers = async () => {
+    setSyncLoading(true);
+    try {
+      const response = await fetch('/api/players', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Recarregar jogadores após sincronização
+        const playersResponse = await fetch('/api/players');
+        const playersData = await playersResponse.json();
+        setPlayers(playersData.players || []);
+        setLastSync(new Date().toLocaleString('pt-BR'));
+        alert(`✅ ${data.message}`);
+      } else {
+        alert(`❌ Erro na sincronização: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Erro na sincronização:', error);
+      alert('❌ Erro ao sincronizar jogadores');
+    } finally {
+      setSyncLoading(false);
+    }
   };
 
   const handleSpawn = async (data: { palId: string; quantity: number; coordinates: { x: number; y: number; z: number } }) => {
@@ -65,7 +95,23 @@ export function HomeDashboard() {
         </header>
         <div className="flex-1 relative">
           <div className="container" style={{ maxWidth: 1200, margin: "40px auto" }}>
-            <h2>Dashboard</h2>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <h2>Dashboard</h2>
+              <button
+                className="btn btn-primary"
+                onClick={syncPlayers}
+                disabled={syncLoading}
+              >
+                {syncLoading ? '🔄 Sincronizando...' : '🔄 Sincronizar Jogadores'}
+              </button>
+            </div>
+
+            {lastSync && (
+              <div className="alert alert-info mb-3">
+                📅 Última sincronização: {lastSync}
+              </div>
+            )}
+
             <div className="mb-4">
               <strong>Servidor:</strong> {serverName}<br />
               <strong>Jogadores online:</strong> {players.length}

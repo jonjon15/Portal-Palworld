@@ -15,3 +15,34 @@ export const palworldApiClient = axios.create({
     password: PALWORLD_API_PASS,
   },
 });
+
+// Funções para integração com PalDefender/PalGuard API
+export async function getPlayersFromAPI() {
+  try {
+    const response = await palworldApiClient.get('/v1/api/players');
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar jogadores da API:', error);
+    return [];
+  }
+}
+
+export async function getServerInfo() {
+  try {
+    const response = await palworldApiClient.get('/v1/api/server');
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar informações do servidor:', error);
+    return null;
+  }
+}
+
+export async function getOnlinePlayersCount() {
+  try {
+    const players = await getPlayersFromAPI();
+    return Array.isArray(players) ? players.length : 0;
+  } catch (error) {
+    console.error('Erro ao contar jogadores online:', error);
+    return 0;
+  }
+}

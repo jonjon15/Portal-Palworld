@@ -83,14 +83,14 @@
         window.onload = function() {
             const isLoggedIn = localStorage.getItem('palworld_auth');
             if (!isLoggedIn) {
-                window.location.href = 'login.html';
+                window.location.href = '/login';
             }
         };
 
         function logout() {
             localStorage.removeItem('palworld_auth');
             localStorage.removeItem('userId');
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }
     </script>
 </body>

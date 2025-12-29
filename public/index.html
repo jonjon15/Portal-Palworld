@@ -50,7 +50,7 @@
     <div class="welcome-container">
         <h1>Portal Palworld</h1>
         <p>Sua plataforma completa para o mundo de Palworld</p>
-        <a href="login.html" class="btn-custom">Entrar</a>
+        <a href="/login" class="btn-custom">Entrar</a>
     </div>
 
     <script>
@@ -58,7 +58,7 @@
         window.onload = function() {
             const isLoggedIn = localStorage.getItem('palworld_auth');
             if (isLoggedIn) {
-                window.location.href = 'dashboard.html';
+                window.location.href = '/dashboard';
             }
         };
     </script>

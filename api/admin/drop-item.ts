@@ -56,7 +56,8 @@ export default async function handler(req: any, res: any) {
       });
     } catch (apiError) {
       // Se API falhar, usar RCON como fallback
-      console.log('API falhou, usando RCON:', apiError);
+      const apiErrorMessage = apiError instanceof Error ? apiError.message : String(apiError);
+      console.log('API falhou, usando RCON:', apiErrorMessage);
       
       try {
         // Tentar diferentes formatos de comando RCON para Palworld
@@ -81,7 +82,8 @@ export default async function handler(req: any, res: any) {
               message: `Item ${item} x${quantity} enviado via RCON para ${playerUserId}`,
               command,
               response,
-              method: 'rcon_fallback'
+              method: 'rcon_fallback',
+              apiError: apiErrorMessage
             });
           } catch (err) {
             lastError = err;
@@ -96,7 +98,8 @@ export default async function handler(req: any, res: any) {
         console.error('RCON também falhou:', rconError);
         return res.status(500).json({
           error: 'Falha ao enviar item via API e RCON',
-          details: rconError instanceof Error ? rconError.message : 'Erro desconhecido'
+          details: rconError instanceof Error ? rconError.message : 'Erro desconhecido',
+          apiError: apiErrorMessage
         });
       }
     }

@@ -13,19 +13,38 @@ export interface PalworldApiPlayer {
   location_z?: number;
 }
 
-function getPalworldApiClient() {
-  const baseURL = (process.env.PALWORLD_API_URL || process.env.PALGUARD_URL || 'http://201.93.248.252:8212').trim();
-  const username = (process.env.PALWORLD_API_USER || process.env.PALGUARD_USER || '').trim();
-  const password = (process.env.PALWORLD_API_PASS || process.env.PALGUARD_PASSWORD || '').trim();
+function trimEnv(value: string | undefined): string {
+  return (value || '').trim().replace(/^['\"]+|['\"]+$/g, '');
+}
 
-  if (!username || !password) {
-    throw new Error('PALWORLD_API_USER/PALWORLD_API_PASS não estão definidos.');
+function getPalworldApiClient() {
+  const baseURL = trimEnv(process.env.PALWORLD_API_URL || process.env.PALGUARD_URL || 'http://201.93.248.252:8212');
+  const username = trimEnv(process.env.PALWORLD_API_USER || process.env.PALGUARD_USER);
+  const password = trimEnv(process.env.PALWORLD_API_PASS || process.env.PALGUARD_PASSWORD);
+
+  const bearerToken =
+    trimEnv(process.env.PALWORLD_API_BEARER_TOKEN) ||
+    trimEnv(process.env.PALDEFENDER_API_TOKEN) ||
+    trimEnv(process.env.PALGUARD_BEARER_TOKEN);
+
+  const client = axios.create({ baseURL });
+
+  // Preferir Bearer token (quando configurado)
+  if (bearerToken) {
+    client.defaults.headers.common.Authorization = `Bearer ${bearerToken}`;
+    return client;
   }
 
-  return axios.create({
-    baseURL,
-    auth: { username, password },
-  });
+  // Senão, tentar Basic auth (quando configurado)
+  if (username && password) {
+    // Axios suporta Basic via config do request, mas aqui setamos como default.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const basic = Buffer.from(`${username}:${password}`).toString('base64');
+    client.defaults.headers.common.Authorization = `Basic ${basic}`;
+  }
+
+  // Se não houver credenciais, ainda assim retorna o client: a API pode estar aberta
+  return client;
 }
 
 function normalizePlayersResponse(data: any): PalworldApiPlayer[] {
@@ -66,32 +85,89 @@ export async function getServerInfo(): Promise<any> {
   }
 }
 
+function formatAxiosError(err: any): string {
+  const status = err?.response?.status;
+  const statusText = err?.response?.statusText;
+  const data = err?.response?.data;
+  const message = err instanceof Error ? err.message : String(err);
+
+  const parts = [message];
+  if (status) parts.push(`status=${status}${statusText ? ` (${statusText})` : ''}`);
+  if (data !== undefined) {
+    try {
+      parts.push(`data=${typeof data === 'string' ? data : JSON.stringify(data)}`);
+    } catch {
+      parts.push('data=[unserializable]');
+    }
+  }
+  return parts.join(' | ');
+}
+
 export async function giveItemToPlayer(steamId: string, itemId: string, quantity: number): Promise<any> {
   try {
     const client = getPalworldApiClient();
-    
-    // Tentar POST /v1/api/give
-    try {
-      const response = await client.post('/v1/api/give', {
-        userId: steamId,
-        itemId: itemId,
-        amount: quantity
-      });
-      return { success: true, method: 'POST /v1/api/give', data: response.data };
-    } catch (postError) {
-      // Se POST falhar, tentar PUT /v1/api/player/give
+
+    const attempts: Array<{
+      method: string;
+      path: string;
+      request: any;
+      run: () => Promise<any>;
+    }> = [
+      {
+        method: 'POST',
+        path: '/v1/api/give',
+        request: { userId: steamId, itemId, amount: quantity },
+        run: async () => (await client.post('/v1/api/give', { userId: steamId, itemId, amount: quantity })).data,
+      },
+      {
+        method: 'PUT',
+        path: '/v1/api/player/give',
+        request: { steamId, itemId, quantity },
+        run: async () => (await client.put('/v1/api/player/give', { steamId, itemId, quantity })).data,
+      },
+      {
+        method: 'POST',
+        path: '/v1/api/player/give',
+        request: { steamId, itemId, quantity },
+        run: async () => (await client.post('/v1/api/player/give', { steamId, itemId, quantity })).data,
+      },
+      {
+        method: 'POST',
+        path: '/v1/api/player/item',
+        request: { playerId: steamId, itemId, count: quantity },
+        run: async () => (await client.post('/v1/api/player/item', { playerId: steamId, itemId, count: quantity })).data,
+      },
+      {
+        method: 'POST',
+        path: '/v1/api/giveitem',
+        request: { userId: steamId, itemId, amount: quantity },
+        run: async () => (await client.post('/v1/api/giveitem', { userId: steamId, itemId, amount: quantity })).data,
+      },
+    ];
+
+    const errors: string[] = [];
+    for (const attempt of attempts) {
       try {
-        const response = await client.put('/v1/api/player/give', {
-          steamId: steamId,
-          itemId: itemId,
-          quantity: quantity
-        });
-        return { success: true, method: 'PUT /v1/api/player/give', data: response.data };
-      } catch (putError) {
-        // Se ambos falharem, retornar erro
-        throw new Error('Nenhum endpoint de API funcionou. Use RCON como fallback.');
+        const data = await attempt.run();
+        return {
+          success: true,
+          method: `${attempt.method} ${attempt.path}`,
+          data,
+        };
+      } catch (err) {
+        errors.push(`${attempt.method} ${attempt.path}: ${formatAxiosError(err)}`);
       }
     }
+
+    // Se nada funcionou, gerar erro detalhado pra facilitar diagnóstico em produção
+    throw new Error(
+      [
+        'Nenhum endpoint REST do PalDefender respondeu com sucesso.',
+        'Tentativas:',
+        ...errors.map((e) => `- ${e}`),
+        'Dica: confira se a porta 8212 está acessível via IP público e se a API aceita Basic/Bearer.',
+      ].join('\n')
+    );
   } catch (error) {
     console.error('Erro ao enviar item via API:', error);
     throw error;

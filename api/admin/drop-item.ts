@@ -96,8 +96,15 @@ export default async function handler(req: any, res: any) {
         }
 
         // Tentar diferentes formatos de comando RCON para Palworld
-        // Prioriza /give (mods como GiveItemMod costumam usar isso)
+        // Prioriza giveitemmod (GiveItemMod v2/v5 registram isso via RegisterConsoleCommandGlobalHandler)
         const commands: string[] = [];
+        const targetNames = targetIds.filter((v) => !v.startsWith('steam_') && /^[A-Za-z0-9_\-]{2,32}$/.test(v));
+        for (const name of targetNames) {
+          commands.push(`giveitemmod ${name} ${item} ${quantity}`);
+          commands.push(`/giveitemmod ${name} ${item} ${quantity}`);
+        }
+
+        // Depois tenta /give (variações)
         for (const id of targetIds) {
           // formato mais comum
           commands.push(`/give ${id} ${item} ${quantity}`);

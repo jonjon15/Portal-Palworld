@@ -127,6 +127,7 @@
         { "id": "GigaSphere", "name": "Giga Sphere", "icon": "🟣" },
         { "id": "HyperSphere", "name": "Hyper Sphere", "icon": "🔴" },
         { "id": "UltraSphere", "name": "Ultra Sphere", "icon": "🟡" },
+        { "id": "UltimateSphere", "name": "Ultimate Sphere", "icon": "✨" },
         { "id": "LegendarySphere", "name": "Legendary Sphere", "icon": "🌟" }
       ]
     },

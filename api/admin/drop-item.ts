@@ -4,6 +4,18 @@ import { applyCorsNode } from '../../lib/cors';
 import { sendRconCommand } from '../../services/rconClient';
 import { getPlayersFromAPI, giveItemToPlayer } from '../../services/palworldApiClient';
 
+function looksLikeCommandFailure(response: string): boolean {
+  const r = (response || '').toLowerCase();
+  if (!r) return false; // alguns servidores retornam vazio mesmo em sucesso
+  return (
+    r.includes('unknown command') ||
+    r.includes('not found') ||
+    r.includes('invalid') ||
+    r.includes('usage:') ||
+    r.includes('error')
+  );
+}
+
 function getAdminUsernames(): string[] {
   const raw = process.env.ADMIN_USERNAMES || '';
   return raw.split(',').map(s => s.trim()).filter(Boolean).map(s => s.toLowerCase());
@@ -87,8 +99,13 @@ export default async function handler(req: any, res: any) {
         // Prioriza /give (mods como GiveItemMod costumam usar isso)
         const commands: string[] = [];
         for (const id of targetIds) {
+          // formato mais comum
           commands.push(`/give ${id} ${item} ${quantity}`);
           commands.push(`give ${id} ${item} ${quantity}`);
+
+          // algumas variações (ordem invertida)
+          commands.push(`/give ${item} ${quantity} ${id}`);
+          commands.push(`give ${item} ${quantity} ${id}`);
         }
         for (const id of targetIds) {
           commands.push(`GiveItem ${id} ${item} ${quantity}`);
@@ -98,11 +115,21 @@ export default async function handler(req: any, res: any) {
           commands.push(`giveitem ${id} ${item} ${quantity}`);
         }
 
+        const attempts: Array<{ command: string; ok: boolean; response?: string; error?: string }> = [];
         let lastError: any;
         for (const command of commands) {
           try {
             console.log(`Tentando comando RCON: ${command}`);
             const response = await sendRconCommand(command);
+
+            // Se o servidor respondeu com algo que parece falha, continua tentando
+            if (looksLikeCommandFailure(response)) {
+              attempts.push({ command, ok: false, response });
+              console.log(`Resposta indica falha para "${command}":`, response);
+              continue;
+            }
+
+            attempts.push({ command, ok: true, response });
             
             return res.status(200).json({
               ok: true,
@@ -114,7 +141,12 @@ export default async function handler(req: any, res: any) {
             });
           } catch (err) {
             lastError = err;
-            console.log(`Comando "${command}" falhou, tentando próximo...`);
+            attempts.push({
+              command,
+              ok: false,
+              error: err instanceof Error ? err.message : String(err)
+            });
+            console.log(`Comando "${command}" falhou, tentando próximo...`, err instanceof Error ? err.message : String(err));
           }
         }
 

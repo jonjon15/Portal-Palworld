@@ -2,7 +2,7 @@ import { prisma } from '../../lib/prisma';
 import { verifyToken } from '../../lib/jwt';
 import { applyCorsNode } from '../../lib/cors';
 import { sendRconCommand } from '../../services/rconClient';
-import { giveItemToPlayer } from '../../services/palworldApiClient';
+import { getPlayersFromAPI, giveItemToPlayer } from '../../services/palworldApiClient';
 
 function getAdminUsernames(): string[] {
   const raw = process.env.ADMIN_USERNAMES || '';
@@ -60,16 +60,43 @@ export default async function handler(req: any, res: any) {
       console.log('API falhou, usando RCON:', apiErrorMessage);
       
       try {
+        // Muitos mods/servidores aceitam /give por playerId (AA7C...) e não por steam_...
+        const targetIds: string[] = [playerUserId];
+        try {
+          const players = await getPlayersFromAPI();
+          const match = players.find((p: any) => {
+            const uid = (p.userId || p.steamid || p.playeruid || '').toString();
+            return uid && uid === playerUserId;
+          });
+          if (match) {
+            const candidates = [match.playerId, match.playeruid, match.name, match.accountName, match.userId, match.steamid]
+              .map((v: any) => (v || '').toString().trim())
+              .filter(Boolean);
+            for (const c of candidates) {
+              if (!targetIds.includes(c)) targetIds.push(c);
+            }
+            console.log('RCON fallback: identificadores do jogador encontrados via /v1/api/players:', targetIds);
+          } else {
+            console.log('RCON fallback: jogador não encontrado na lista /v1/api/players; usando apenas playerUserId');
+          }
+        } catch (e) {
+          console.log('RCON fallback: falha ao consultar /v1/api/players (seguindo sem playerId):', e instanceof Error ? e.message : String(e));
+        }
+
         // Tentar diferentes formatos de comando RCON para Palworld
-        const commands = [
-          `GiveItem ${playerUserId} ${item} ${quantity}`,
-          `GiveItemToPlayer ${playerUserId} ${item} ${quantity}`,
-          `/GiveItem ${playerUserId} ${item} ${quantity}`,
-          `/GiveItemToPlayer ${playerUserId} ${item} ${quantity}`,
-          `giveitem ${playerUserId} ${item} ${quantity}`,
-          `/give ${playerUserId} ${item} ${quantity}`,
-          `give ${playerUserId} ${item} ${quantity}`
-        ];
+        // Prioriza /give (mods como GiveItemMod costumam usar isso)
+        const commands: string[] = [];
+        for (const id of targetIds) {
+          commands.push(`/give ${id} ${item} ${quantity}`);
+          commands.push(`give ${id} ${item} ${quantity}`);
+        }
+        for (const id of targetIds) {
+          commands.push(`GiveItem ${id} ${item} ${quantity}`);
+          commands.push(`GiveItemToPlayer ${id} ${item} ${quantity}`);
+          commands.push(`/GiveItem ${id} ${item} ${quantity}`);
+          commands.push(`/GiveItemToPlayer ${id} ${item} ${quantity}`);
+          commands.push(`giveitem ${id} ${item} ${quantity}`);
+        }
 
         let lastError: any;
         for (const command of commands) {

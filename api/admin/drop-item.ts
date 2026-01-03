@@ -59,11 +59,15 @@ export default async function handler(req: any, res: any) {
       console.log('API falhou, usando RCON:', apiError);
       
       try {
-        // Tentar diferentes formatos de comando RCON
+        // Tentar diferentes formatos de comando RCON para Palworld
         const commands = [
           `GiveItem ${playerUserId} ${item} ${quantity}`,
           `GiveItemToPlayer ${playerUserId} ${item} ${quantity}`,
-          `/give ${playerUserId} ${item} ${quantity}`
+          `/GiveItem ${playerUserId} ${item} ${quantity}`,
+          `/GiveItemToPlayer ${playerUserId} ${item} ${quantity}`,
+          `giveitem ${playerUserId} ${item} ${quantity}`,
+          `/give ${playerUserId} ${item} ${quantity}`,
+          `give ${playerUserId} ${item} ${quantity}`
         ];
 
         let lastError: any;

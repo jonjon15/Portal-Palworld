@@ -58,16 +58,43 @@ export default async function handler(req: any, res: any) {
       // Se API falhar, usar RCON como fallback
       console.log('API falhou, usando RCON:', apiError);
       
-      const command = `/give ${playerUserId} ${item} ${quantity}`;
-      const response = await sendRconCommand(command);
+      try {
+        // Tentar diferentes formatos de comando RCON
+        const commands = [
+          `GiveItem ${playerUserId} ${item} ${quantity}`,
+          `GiveItemToPlayer ${playerUserId} ${item} ${quantity}`,
+          `/give ${playerUserId} ${item} ${quantity}`
+        ];
 
-      return res.status(200).json({
-        ok: true,
-        message: `Item ${item} x${quantity} enviado para ${playerUserId}`,
-        command,
-        response,
-        method: 'rcon_fallback'
-      });
+        let lastError: any;
+        for (const command of commands) {
+          try {
+            console.log(`Tentando comando RCON: ${command}`);
+            const response = await sendRconCommand(command);
+            
+            return res.status(200).json({
+              ok: true,
+              message: `Item ${item} x${quantity} enviado via RCON para ${playerUserId}`,
+              command,
+              response,
+              method: 'rcon_fallback'
+            });
+          } catch (err) {
+            lastError = err;
+            console.log(`Comando "${command}" falhou, tentando próximo...`);
+          }
+        }
+
+        // Se todos os comandos falharam
+        throw lastError || new Error('Todos os comandos RCON falharam');
+
+      } catch (rconError) {
+        console.error('RCON também falhou:', rconError);
+        return res.status(500).json({
+          error: 'Falha ao enviar item via API e RCON',
+          details: rconError instanceof Error ? rconError.message : 'Erro desconhecido'
+        });
+      }
     }
 
   } catch (error) {

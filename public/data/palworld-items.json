@@ -1,13 +1,14 @@
 {
+  "imageBaseUrl": "https://palworld.gg/_next/image?url=%2Ficons%2F",
   "categories": {
     "resources": {
-      "name": "Recursos",
+      "name": "🪨 Recursos Básicos",
       "items": [
         { "id": "Stone", "name": "Pedra", "icon": "🪨" },
         { "id": "Wood", "name": "Madeira", "icon": "🪵" },
         { "id": "Fiber", "name": "Fibra", "icon": "🌾" },
-        { "id": "Paldium", "name": "Paldium", "icon": "💎" },
-        { "id": "Coal", "name": "Carvão", "icon": "⬛" },
+        { "id": "PaldinumFragment", "name": "Fragmento de Paldium", "icon": "💎" },
+        { "id": "Charcoal", "name": "Carvão", "icon": "⬛" },
         { "id": "IronOre", "name": "Minério de Ferro", "icon": "⚫" },
         { "id": "CopperOre", "name": "Minério de Cobre", "icon": "🟤" },
         { "id": "GoldOre", "name": "Minério de Ouro", "icon": "🟡" },
@@ -17,48 +18,73 @@
         { "id": "CopperIngot", "name": "Lingote de Cobre", "icon": "🟫" },
         { "id": "GoldIngot", "name": "Lingote de Ouro", "icon": "🪙" },
         { "id": "RefinedIngot", "name": "Lingote Refinado", "icon": "✨" },
-        { "id": "Charcoal", "name": "Carvão Vegetal", "icon": "⚫" },
         { "id": "Gunpowder", "name": "Pólvora", "icon": "💥" },
-        { "id": "CementBag", "name": "Saco de Cimento", "icon": "🧱" }
+        { "id": "CementBag", "name": "Saco de Cimento", "icon": "🧱" },
+        { "id": "CarbonFiber", "name": "Fibra de Carbono", "icon": "⬛" }
+      ]
+    },
+    "tools": {
+      "name": "🔨 Ferramentas",
+      "items": [
+        { "id": "StonePickaxe", "name": "Picareta de Pedra", "icon": "⛏️" },
+        { "id": "StoneAxe", "name": "Machado de Pedra", "icon": "🪓" },
+        { "id": "Torch", "name": "Tocha", "icon": "🔦" },
+        { "id": "MetalPickaxe", "name": "Picareta de Metal", "icon": "⛏️" },
+        { "id": "MetalAxe", "name": "Machado de Metal", "icon": "🪓" },
+        { "id": "RefinedMetalPickaxe", "name": "Picareta de Metal Refinada", "icon": "⛏️" },
+        { "id": "RefinedMetalAxe", "name": "Machado de Metal Refinado", "icon": "🪓" },
+        { "id": "Glider", "name": "Planador", "icon": "🪂" },
+        { "id": "GrapplingGun", "name": "Arma de Gancho", "icon": "🔫" }
       ]
     },
     "weapons": {
-      "name": "Armas",
+      "name": "⚔️ Armas",
       "items": [
-        { "id": "Bat", "name": "Bastão", "icon": "🏏" },
+        { "id": "WoodenClub", "name": "Clava de Madeira", "icon": "🏏" },
         { "id": "Spear", "name": "Lança", "icon": "🔱" },
         { "id": "Bow", "name": "Arco", "icon": "🏹" },
+        { "id": "OldBow", "name": "Arco Velho", "icon": "🏹" },
+        { "id": "FireBow", "name": "Arco de Fogo", "icon": "🔥" },
+        { "id": "PoisonBow", "name": "Arco Venenoso", "icon": "☣️" },
         { "id": "Crossbow", "name": "Besta", "icon": "🏹" },
         { "id": "HandGun", "name": "Pistola", "icon": "🔫" },
-        { "id": "Rifle_Default", "name": "Rifle", "icon": "🔫" },
         { "id": "Shotgun", "name": "Escopeta", "icon": "🔫" },
-        { "id": "AssaultRifle_Default", "name": "Rifle de Assalto", "icon": "🔫" },
-        { "id": "Launcher_Default", "name": "Lança-Foguetes", "icon": "🚀" },
+        { "id": "AssaultRifle", "name": "Rifle de Assalto", "icon": "🔫" },
+        { "id": "PumpActionShotgun", "name": "Escopeta de Ação", "icon": "🔫" },
+        { "id": "RocketLauncher", "name": "Lança-Foguetes", "icon": "🚀" },
+        { "id": "GrenadeLauncher", "name": "Lança-Granadas", "icon": "💣" },
+        { "id": "Makshift", "name": "Arma Improvisada", "icon": "🔧" },
+        { "id": "SingleShotRifle", "name": "Rifle de Um Tiro", "icon": "🔫" },
+        { "id": "DoubleBarrelShotgun", "name": "Escopeta de Cano Duplo", "icon": "🔫" },
+        { "id": "ExplosiveBowgun", "name": "Besta Explosiva", "icon": "💥" },
         { "id": "FlameThrower", "name": "Lança-Chamas", "icon": "🔥" },
+        { "id": "MultiGuidedMissileLauncher", "name": "Lançador de Mísseis Guiados", "icon": "🚀" },
+        { "id": "GatlingGun", "name": "Metralhadora Gatling", "icon": "🔫" },
         { "id": "LaserRifle", "name": "Rifle Laser", "icon": "⚡" },
-        { "id": "Pickaxe", "name": "Picareta", "icon": "⛏️" },
-        { "id": "Axe", "name": "Machado", "icon": "🪓" },
-        { "id": "Pickaxe_Tier_02", "name": "Picareta de Metal", "icon": "⛏️" },
-        { "id": "Axe_Tier_02", "name": "Machado de Metal", "icon": "🪓" },
-        { "id": "Pickaxe_Tier_03", "name": "Picareta Refinada", "icon": "⛏️" },
-        { "id": "Axe_Tier_03", "name": "Machado Refinado", "icon": "🪓" }
+        { "id": "ElectricStunBaton", "name": "Bastão Elétrico", "icon": "⚡" }
       ]
     },
     "armor": {
-      "name": "Armaduras",
+      "name": "🛡️ Armaduras",
       "items": [
-        { "id": "ClothArmor", "name": "Armadura de Pano", "icon": "👕" },
+        { "id": "ClothOutfit", "name": "Roupa de Pano", "icon": "👕" },
+        { "id": "Helmet", "name": "Capacete", "icon": "⛑️" },
+        { "id": "PeltArmor", "name": "Armadura de Pele", "icon": "🦌" },
         { "id": "CopperArmor", "name": "Armadura de Cobre", "icon": "🛡️" },
         { "id": "IronArmor", "name": "Armadura de Ferro", "icon": "⚔️" },
-        { "id": "SteelArmor", "name": "Armadura de Aço", "icon": "🛡️" },
+        { "id": "TropicalOutfit", "name": "Roupa Tropical", "icon": "🏖️" },
+        { "id": "ColdResistantUnderwear", "name": "Roupa Térmica", "icon": "🧥" },
+        { "id": "HeatResistantUnderwear", "name": "Roupa Anti-Calor", "icon": "👔" },
+        { "id": "MetalArmor", "name": "Armadura de Metal", "icon": "🛡️" },
+        { "id": "RefinedMetalArmor", "name": "Armadura de Metal Refinada", "icon": "🛡️" },
         { "id": "Pal_MetalArmor", "name": "Armadura de Metal para Pal", "icon": "🛡️" },
-        { "id": "Head_001", "name": "Capacete", "icon": "⛑️" },
-        { "id": "Head_002", "name": "Capacete de Metal", "icon": "⛑️" },
-        { "id": "Head_003", "name": "Capacete de Aço", "icon": "⛑️" }
+        { "id": "Pal_GoldenCrown", "name": "Coroa Dourada para Pal", "icon": "👑" },
+        { "id": "Shield", "name": "Escudo", "icon": "🛡️" },
+        { "id": "HyperShield", "name": "Hiper Escudo", "icon": "🛡️" }
       ]
     },
     "consumables": {
-      "name": "Consumíveis",
+      "name": "🍖 Consumíveis",
       "items": [
         { "id": "BerryJuice", "name": "Suco de Frutas", "icon": "🧃" },
         { "id": "Bread", "name": "Pão", "icon": "🍞" },
@@ -72,15 +98,29 @@
         { "id": "Egg", "name": "Ovo", "icon": "🥚" },
         { "id": "RawMeat", "name": "Carne Crua", "icon": "🥩" },
         { "id": "CookedMeat", "name": "Carne Cozida", "icon": "🍖" },
-        { "id": "HealthPotion", "name": "Poção de Vida", "icon": "🧪" },
-        { "id": "StaminaPotion", "name": "Poção de Stamina", "icon": "⚡" },
+        { "id": "Mushroom", "name": "Cogumelo", "icon": "🍄" },
+        { "id": "Wheat", "name": "Trigo", "icon": "🌾" },
+        { "id": "Flour", "name": "Farinha", "icon": "🌾" },
+        { "id": "Lettuce", "name": "Alface", "icon": "🥬" },
+        { "id": "Tomato", "name": "Tomate", "icon": "🍅" },
+        { "id": "RedBerries", "name": "Frutas Vermelhas", "icon": "🔴" }
+      ]
+    },
+    "medicine": {
+      "name": "💊 Medicina",
+      "items": [
+        { "id": "LowGradeMedicalSupplies", "name": "Suprimentos Médicos Básicos", "icon": "💊" },
         { "id": "MedicalSupplies", "name": "Suprimentos Médicos", "icon": "💊" },
-        { "id": "LowGradeMedicalSupplies", "name": "Suprimentos Médicos Baixos", "icon": "💊" },
-        { "id": "HighGradeMedicalSupplies", "name": "Suprimentos Médicos Altos", "icon": "💊" }
+        { "id": "HighGradeMedicalSupplies", "name": "Suprimentos Médicos Avançados", "icon": "💊" },
+        { "id": "StrangeJuice", "name": "Suco Estranho", "icon": "🧪" },
+        { "id": "SkillFruit_Dodge", "name": "Fruta de Esquiva", "icon": "🍎" },
+        { "id": "SkillFruit_AttackUp", "name": "Fruta de Ataque", "icon": "🍎" },
+        { "id": "SkillFruit_DefenseUp", "name": "Fruta de Defesa", "icon": "🍎" },
+        { "id": "SkillFruit_WorkSpeedUp", "name": "Fruta de Velocidade", "icon": "🍎" }
       ]
     },
     "spheres": {
-      "name": "Esferas",
+      "name": "⚪ Esferas",
       "items": [
         { "id": "PalSphere", "name": "Pal Sphere", "icon": "⚪" },
         { "id": "MegaSphere", "name": "Mega Sphere", "icon": "🔵" },
@@ -91,20 +131,26 @@
       ]
     },
     "ammo": {
-      "name": "Munição",
+      "name": "🔹 Munição",
       "items": [
         { "id": "Arrow", "name": "Flecha", "icon": "➡️" },
         { "id": "FireArrow", "name": "Flecha de Fogo", "icon": "🔥" },
         { "id": "PoisonArrow", "name": "Flecha Venenosa", "icon": "☢️" },
-        { "id": "Bullet", "name": "Bala", "icon": "🔸" },
+        { "id": "ArrowBolt", "name": "Seta de Besta", "icon": "➡️" },
+        { "id": "HandgunBullet", "name": "Bala de Pistola", "icon": "🔸" },
         { "id": "RifleBullet", "name": "Bala de Rifle", "icon": "🔹" },
         { "id": "ShotgunShell", "name": "Cartucho de Escopeta", "icon": "🔻" },
+        { "id": "AssaultRifleBullet", "name": "Bala de Rifle de Assalto", "icon": "🔹" },
         { "id": "Rocket", "name": "Foguete", "icon": "🚀" },
-        { "id": "ExplosiveBullet", "name": "Bala Explosiva", "icon": "💥" }
+        { "id": "ExplosiveBullet", "name": "Bala Explosiva", "icon": "💥" },
+        { "id": "Grenade", "name": "Granada", "icon": "💣" },
+        { "id": "IncendiaryGrenade", "name": "Granada Incendiária", "icon": "🔥" },
+        { "id": "ShockGrenade", "name": "Granada de Choque", "icon": "⚡" },
+        { "id": "IceGrenade", "name": "Granada de Gelo", "icon": "❄️" }
       ]
     },
     "materials": {
-      "name": "Materiais",
+      "name": "🦴 Materiais",
       "items": [
         { "id": "Leather", "name": "Couro", "icon": "🦌" },
         { "id": "Cloth", "name": "Tecido", "icon": "🧵" },
@@ -114,13 +160,16 @@
         { "id": "FireOrgan", "name": "Órgão de Fogo", "icon": "🔥" },
         { "id": "IceOrgan", "name": "Órgão de Gelo", "icon": "❄️" },
         { "id": "ElectricOrgan", "name": "Órgão Elétrico", "icon": "⚡" },
+        { "id": "Venom", "name": "Veneno", "icon": "☣️" },
         { "id": "AncientCivilizationParts", "name": "Peças de Civilização Antiga", "icon": "🏛️" },
         { "id": "PalFluid", "name": "Fluido Pal", "icon": "💧" },
-        { "id": "HighQualityPalOil", "name": "Óleo Pal de Alta Qualidade", "icon": "🛢️" }
+        { "id": "HighQualityPalOil", "name": "Óleo Pal de Alta Qualidade", "icon": "🛢️" },
+        { "id": "CircuitBoard", "name": "Placa de Circuito", "icon": "🔌" },
+        { "id": "Memory_chip", "name": "Chip de Memória", "icon": "💾" }
       ]
     },
     "building": {
-      "name": "Construção",
+      "name": "🏗️ Construção",
       "items": [
         { "id": "WoodWall", "name": "Parede de Madeira", "icon": "🪵" },
         { "id": "StoneWall", "name": "Parede de Pedra", "icon": "🧱" },
@@ -131,14 +180,54 @@
         { "id": "WoodDoor", "name": "Porta de Madeira", "icon": "🚪" },
         { "id": "StoneDoor", "name": "Porta de Pedra", "icon": "🚪" },
         { "id": "MetalDoor", "name": "Porta de Metal", "icon": "🚪" },
-        { "id": "Chest", "name": "Baú", "icon": "📦" },
-        { "id": "Bed", "name": "Cama", "icon": "🛏️" },
+        { "id": "WoodRoof", "name": "Telhado de Madeira", "icon": "🏠" },
+        { "id": "StoneRoof", "name": "Telhado de Pedra", "icon": "🏠" },
+        { "id": "MetalRoof", "name": "Telhado de Metal", "icon": "🏠" },
+        { "id": "WoodFloor", "name": "Piso de Madeira", "icon": "🪵" },
+        { "id": "StoneFloor", "name": "Piso de Pedra", "icon": "🧱" },
+        { "id": "MetalFloor", "name": "Piso de Metal", "icon": "🏗️" },
         { "id": "Campfire", "name": "Fogueira", "icon": "🔥" },
-        { "id": "CookingPot", "name": "Panela de Cozinha", "icon": "🍲" }
+        { "id": "CookingPot", "name": "Panela de Cozinha", "icon": "🍲" },
+        { "id": "Furnace", "name": "Fornalha", "icon": "🔥" },
+        { "id": "ImprovedFurnace", "name": "Fornalha Melhorada", "icon": "🔥" },
+        { "id": "ElectricFurnace", "name": "Fornalha Elétrica", "icon": "⚡" }
+      ]
+    },
+    "storage": {
+      "name": "📦 Armazenamento",
+      "items": [
+        { "id": "WoodenChest", "name": "Baú de Madeira", "icon": "📦" },
+        { "id": "MetalChest", "name": "Baú de Metal", "icon": "📦" },
+        { "id": "PalBox", "name": "Caixa de Pal", "icon": "📦" },
+        { "id": "FeedBag", "name": "Saco de Ração", "icon": "🎒" },
+        { "id": "Refrigerator", "name": "Geladeira", "icon": "❄️" },
+        { "id": "ElectricRefrigerator", "name": "Geladeira Elétrica", "icon": "⚡" }
+      ]
+    },
+    "farming": {
+      "name": "🌾 Agricultura",
+      "items": [
+        { "id": "BerryPlantation", "name": "Plantação de Frutas", "icon": "🔴" },
+        { "id": "WheatPlantation", "name": "Plantação de Trigo", "icon": "🌾" },
+        { "id": "LettucePlantation", "name": "Plantação de Alface", "icon": "🥬" },
+        { "id": "TomatoPlantation", "name": "Plantação de Tomate", "icon": "🍅" },
+        { "id": "BreedingFarm", "name": "Fazenda de Criação", "icon": "🐣" },
+        { "id": "RanchAnimalProduct", "name": "Ranch de Produtos Animais", "icon": "🥚" }
+      ]
+    },
+    "electricity": {
+      "name": "⚡ Eletricidade",
+      "items": [
+        { "id": "ElectricGenerator", "name": "Gerador Elétrico", "icon": "⚡" },
+        { "id": "Battery", "name": "Bateria", "icon": "🔋" },
+        { "id": "ElectricWire", "name": "Cabo Elétrico", "icon": "🔌" },
+        { "id": "ElectricLight", "name": "Luz Elétrica", "icon": "💡" },
+        { "id": "Heater", "name": "Aquecedor", "icon": "🔥" },
+        { "id": "Cooler", "name": "Resfriador", "icon": "❄️" }
       ]
     },
     "special": {
-      "name": "Especiais",
+      "name": "✨ Especiais",
       "items": [
         { "id": "GoldCoin", "name": "Moeda de Ouro", "icon": "🪙" },
         { "id": "TechnologyPoints", "name": "Pontos de Tecnologia", "icon": "🔬" },
@@ -146,7 +235,15 @@
         { "id": "SchematicsBook", "name": "Livro de Esquemas", "icon": "📖" },
         { "id": "RandomSkillFruit", "name": "Fruta de Habilidade Aleatória", "icon": "🍎" },
         { "id": "MemoryWipingMedicine", "name": "Medicamento de Apagamento de Memória", "icon": "💊" },
-        { "id": "BeautifulFlower", "name": "Flor Bonita", "icon": "🌸" }
+        { "id": "BeautifulFlower", "name": "Flor Bonita", "icon": "🌸" },
+        { "id": "PalEgg_Normal_01", "name": "Ovo de Pal Comum", "icon": "🥚" },
+        { "id": "PalEgg_Fire_01", "name": "Ovo de Pal de Fogo", "icon": "🔥" },
+        { "id": "PalEgg_Water_01", "name": "Ovo de Pal de Água", "icon": "💧" },
+        { "id": "PalEgg_Leaf_01", "name": "Ovo de Pal de Planta", "icon": "🌿" },
+        { "id": "PalEgg_Electric_01", "name": "Ovo de Pal Elétrico", "icon": "⚡" },
+        { "id": "PalEgg_Ice_01", "name": "Ovo de Pal de Gelo", "icon": "❄️" },
+        { "id": "PalEgg_Dark_01", "name": "Ovo de Pal Sombrio", "icon": "🌑" },
+        { "id": "PalEgg_Dragon_01", "name": "Ovo de Pal Dragão", "icon": "🐉" }
       ]
     }
   }

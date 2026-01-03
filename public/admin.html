@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Palworld - Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .navbar {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    code {
+      color: #111;
+      background: rgba(0,0,0,0.06);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/dashboard">Portal Palworld</a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-warning" href="/creative-menu.html">🎨 Creative Menu</a>
+        <a class="btn btn-outline-light" href="/dashboard">Voltar</a>
+        <button class="btn btn-danger" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="card p-3">
+          <h5 class="mb-3">Admin: Dropar item na bag</h5>
+
+          <form id="dropForm" class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Jogador Online</label>
+              <div style="position: relative;">
+                <input id="playerSearch" class="form-control" placeholder="Digite o nome do jogador..." autocomplete="off" />
+                <div id="playerList" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #dee2e6; border-top: none; border-radius: 0 0 8px 8px; max-height: 200px; overflow-y: auto; z-index: 1000; display: none;"></div>
+              </div>
+              <input type="hidden" id="selectedSteamId" />
+              <small class="text-muted">Selecione um jogador online da lista</small>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Item</label>
+              <input id="item" class="form-control" placeholder="Ex: Launcher_Default_5" required />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Qtd</label>
+              <input id="quantity" type="number" min="1" step="1" class="form-control" value="1" required />
+            </div>
+
+            <div class="col-12 d-grid">
+              <button class="btn btn-primary" type="submit">Enviar Item</button>
+            </div>
+          </form>
+          
+          <div class="mt-2">
+            <small class="text-muted">
+              Usando PalDefender <code>/give</code> command via RCON
+            </small>
+          </div>
+
+          <div class="mt-3">
+            <div id="status" class="small text-muted"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card p-3">
+          <h6 class="mb-2">Regras de acesso</h6>
+          <div class="small text-muted">
+            Somente usuários em <code>ADMIN_USERNAMES</code> conseguem usar esta página.
+          </div>
+          <hr />
+          <div class="small text-muted">
+            Dica: configure <code>ADMIN_USERNAMES</code> como lista separada por vírgula.
+            Ex: <code>ADMIN_USERNAMES=admin,jon</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function logout() {
+      localStorage.removeItem('palworld_auth');
+      localStorage.removeItem('palworld_token');
+      localStorage.removeItem('userId');
+      window.location.href = '/login';
+    }
+
+    let players = [];
+
+    function setStatus(text) {
+      document.getElementById('status').textContent = text || '';
+    }
+
+    async function loadPlayers() {
+      const token = localStorage.getItem('palworld_token');
+      if (!token) return;
+
+      try {
+        const res = await fetch('/api/admin/online-players', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) {
+          const error = await res.json().catch(() => ({ error: 'Erro desconhecido' }));
+          console.error('Erro ao carregar jogadores:', error);
+          setStatus(`❌ Erro: ${error.error}`);
+          return;
+        }
+
+        const data = await res.json();
+        players = data.players || [];
+        
+        console.log('Jogadores carregados:', players);
+        
+        if (players.length === 0) {
+          setStatus('⚠️ Nenhum jogador online');
+        } else {
+          setStatus(`✅ ${players.length} jogador(es) online`);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar jogadores:', error);
+        setStatus('❌ Falha ao conectar com servidor');
+      }
+    }
+
+    async function ensureAdmin() {
+      const isLoggedIn = localStorage.getItem('palworld_auth');
+      const token = localStorage.getItem('palworld_token');
+      if (!isLoggedIn || !token) {
+        window.location.href = '/login';
+        return;
+      }
+
+      const res = await fetch('/api/admin/check', {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        const msg = data?.error || 'Acesso negado.';
+        setStatus(msg);
+        if (String(msg).includes('ADMIN_USERNAMES')) {
+          setStatus(
+            msg +
+              ' Configure ADMIN_USERNAMES na Vercel (Production) e faça redeploy. Ex: ADMIN_USERNAMES=admin'
+          );
+          return;
+        }
+        alert(msg);
+        window.location.href = '/dashboard';
+        return;
+      }
+
+      const data = await res.json().catch(() => ({}));
+      setStatus(`Admin autenticado: ${data?.username || ''}`);
+    }
+
+    async function dropItem(evt) {
+      evt.preventDefault();
+
+      const token = localStorage.getItem('palworld_token');
+      if (!token) {
+        window.location.href = '/login';
+        return;
+      }
+
+      const steamId = document.getElementById('selectedSteamId').value.trim();
+      const item = document.getElementById('item').value.trim();
+      const quantity = Number(document.getElementById('quantity').value);
+
+      if (!steamId) {
+        setStatus('❌ Selecione um jogador da lista');
+        return;
+      }
+
+      setStatus('Enviando comando...');
+
+      const payload = {
+        playerUserId: steamId,
+        item,
+        quantity,
+      };
+
+      const res = await fetch('/api/admin/drop-item', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatus(data?.error || 'Falha ao dropar item.');
+        return;
+      }
+
+      setStatus(`✅ ${data?.message || 'Item enviado!'}`);
+      document.getElementById('item').value = '';
+      document.getElementById('quantity').value = '1';
+    }
+
+    window.onload = function () {
+      ensureAdmin().catch((e) => {
+        setStatus(e?.message || 'Falha ao validar admin.');
+      });
+
+      loadPlayers();
+      setInterval(loadPlayers, 10000);
+
+      const playerSearch = document.getElementById('playerSearch');
+      const playerList = document.getElementById('playerList');
+      const selectedSteamId = document.getElementById('selectedSteamId');
+
+      playerSearch.addEventListener('input', (e) => {
+        const search = e.target.value.toLowerCase();
+        
+        if (!search) {
+          playerList.style.display = 'none';
+          return;
+        }
+
+        const filtered = players.filter(p => 
+          p.name.toLowerCase().includes(search)
+        );
+
+        if (filtered.length === 0) {
+          playerList.innerHTML = '<div style="padding: 12px;">Nenhum jogador encontrado</div>';
+          playerList.style.display = 'block';
+          return;
+        }
+
+        playerList.innerHTML = filtered.map(p => `
+          <div class="player-item" data-steamid="${p.steamId}" data-name="${p.name}" style="padding: 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0;">
+            <div style="font-weight: 600;">${p.name}</div>
+            <div style="font-size: 12px; color: #999;">Steam ID: ${p.steamId}</div>
+          </div>
+        `).join('');
+
+        playerList.style.display = 'block';
+
+        playerList.querySelectorAll('.player-item').forEach(item => {
+          item.addEventListener('mouseenter', (e) => {
+            e.target.style.background = '#f8f9ff';
+          });
+          item.addEventListener('mouseleave', (e) => {
+            e.target.style.background = 'white';
+          });
+          item.addEventListener('click', () => {
+            const steamId = item.dataset.steamid;
+            const name = item.dataset.name;
+            
+            playerSearch.value = name;
+            selectedSteamId.value = steamId;
+            playerList.style.display = 'none';
+          });
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#playerSearch') && !e.target.closest('#playerList')) {
+          playerList.style.display = 'none';
+        }
+      });
+
+      document.getElementById('dropForm').addEventListener('submit', dropItem);
+    };
+  </script>
+</body>
+</html>

@@ -44,11 +44,17 @@
         <form id="register-form">
             <div class="mb-3">
                 <label for="username" class="form-label">Usuário</label>
-                <input type="text" class="form-control" id="username" required>
+                <input type="text" class="form-control" id="username" required minlength="3" maxlength="20">
+                <small class="text-muted">Apenas letras, números e underscore</small>
+            </div>
+            <div class="mb-3">
+                <label for="playerName" class="form-label">Nome do Jogador</label>
+                <input type="text" class="form-control" id="playerName" required minlength="3" maxlength="30">
+                <small class="text-muted">Nome do seu personagem no jogo</small>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Senha</label>
-                <input type="password" class="form-control" id="password" required>
+                <input type="password" class="form-control" id="password" required minlength="6">
             </div>
             <div class="mb-3">
                 <label for="confirmPassword" class="form-label">Confirmar Senha</label>
@@ -67,6 +73,7 @@
             e.preventDefault();
 
             const username = document.getElementById('username').value;
+            const playerName = document.getElementById('playerName').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -81,15 +88,26 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ username, password }),
+                    body: JSON.stringify({ 
+                        username, 
+                        playerName,
+                        password 
+                    }),
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    showSuccess('Usuário criado com sucesso! Redirecionando...');
+                    showSuccess(`Usuário criado com sucesso! Jogador "${data.playerName}" criado. Redirecionando...`);
+                    
+                    // Salvar token no localStorage
+                    localStorage.setItem('palworld_token', data.token);
+                    localStorage.setItem('palworld_auth', 'true');
+                    localStorage.setItem('userId', data.userId);
+                    localStorage.setItem('playerName', data.playerName);
+                    
                     setTimeout(() => {
-                        window.location.href = '/login';
+                        window.location.href = '/dashboard';
                     }, 2000);
                 } else {
                     showError(data.error);

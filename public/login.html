@@ -77,9 +77,13 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Salvar no localStorage
+                    // Salvar token e dados no localStorage
+                    localStorage.setItem('palworld_token', data.token);
                     localStorage.setItem('palworld_auth', 'true');
                     localStorage.setItem('userId', data.userId);
+                    localStorage.setItem('username', data.username);
+                    localStorage.setItem('playerName', data.playerName);
+                    localStorage.setItem('playerId', data.playerId);
 
                     // Redirecionar
                     window.location.href = '/dashboard';

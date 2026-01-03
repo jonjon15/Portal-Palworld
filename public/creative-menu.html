@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Palworld - Creative Menu</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .container-fluid {
+      padding: 20px;
+    }
+
+    .sidebar {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      padding: 20px;
+      height: calc(100vh - 120px);
+      overflow-y: auto;
+      border: 2px solid rgba(255, 215, 0, 0.2);
+    }
+
+    .category-btn {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      color: #fff;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .category-btn:hover {
+      background: rgba(255, 215, 0, 0.2);
+      border-color: rgba(255, 215, 0, 0.6);
+      transform: translateX(5px);
+    }
+
+    .category-btn.active {
+      background: rgba(255, 215, 0, 0.3);
+      border-color: #ffd700;
+    }
+
+    .main-content {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      padding: 20px;
+      border: 2px solid rgba(255, 215, 0, 0.2);
+      min-height: calc(100vh - 120px);
+    }
+
+    .search-box {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 10px;
+      padding: 12px 20px;
+      color: #fff;
+      width: 100%;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .search-box::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: #ffd700;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .item-card {
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      position: relative;
+    }
+
+    .item-card:hover {
+      transform: translateY(-5px);
+      border-color: #ffd700;
+      background: rgba(255, 215, 0, 0.1);
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+    }
+
+    .item-card.selected {
+      border-color: #ffd700;
+      background: rgba(255, 215, 0, 0.2);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .item-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .item-name {
+      font-size: 12px;
+      color: #fff;
+      word-wrap: break-word;
+      font-weight: 500;
+    }
+
+    .item-id {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 5px;
+    }
+
+    .selection-panel {
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .player-select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 10px;
+      padding: 12px;
+      color: #fff;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .player-select:focus {
+      outline: none;
+      border-color: #ffd700;
+    }
+
+    .player-select option {
+      background: #1a1a2e;
+      color: #fff;
+    }
+
+    .quantity-input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 10px;
+      padding: 12px;
+      color: #fff;
+      width: 100%;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .quantity-input:focus {
+      outline: none;
+      border-color: #ffd700;
+    }
+
+    .drop-btn {
+      background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+      border: none;
+      border-radius: 10px;
+      padding: 15px 30px;
+      color: #1a1a2e;
+      font-weight: 700;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .drop-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+    }
+
+    .drop-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status-message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .status-success {
+      background: rgba(34, 197, 94, 0.2);
+      border: 2px solid #22c55e;
+      color: #22c55e;
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 2px solid #ef4444;
+      color: #ef4444;
+    }
+
+    .category-count {
+      background: rgba(255, 215, 0, 0.3);
+      border-radius: 12px;
+      padding: 2px 8px;
+      font-size: 12px;
+      margin-left: auto;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 215, 0, 0.5);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 215, 0, 0.7);
+    }
+
+    .header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      border: 2px solid rgba(255, 215, 0, 0.2);
+    }
+
+    .selected-item-display {
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .selected-item-icon {
+      font-size: 64px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand text-warning fw-bold" href="/dashboard">🎮 Portal Palworld - Creative Menu</a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-warning" href="/admin.html">Admin Clássico</a>
+        <a class="btn btn-outline-light" href="/dashboard">Dashboard</a>
+        <button class="btn btn-danger" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row g-3">
+      <!-- Sidebar com categorias -->
+      <div class="col-md-3">
+        <div class="sidebar">
+          <h5 class="mb-3 text-warning">📂 Categorias</h5>
+          <div id="categories"></div>
+        </div>
+      </div>
+
+      <!-- Área principal com itens -->
+      <div class="col-md-6">
+        <div class="main-content">
+          <div class="header-info">
+            <div>
+              <h5 class="text-warning mb-0">✨ Catálogo de Itens</h5>
+              <small id="itemCount">0 itens</small>
+            </div>
+            <div class="text-end">
+              <small id="onlinePlayers">Carregando...</small>
+            </div>
+          </div>
+
+          <input 
+            type="text" 
+            id="searchBox" 
+            class="search-box" 
+            placeholder="🔍 Buscar itens... (ex: arma, pedra, esfera)"
+            autocomplete="off"
+          />
+
+          <div id="itemsGrid" class="items-grid"></div>
+        </div>
+      </div>
+
+      <!-- Painel de seleção e dropar -->
+      <div class="col-md-3">
+        <div class="sidebar">
+          <h5 class="mb-3 text-warning">🎯 Dropar Item</h5>
+
+          <div id="selectedItemDisplay" class="selected-item-display" style="display: none;">
+            <div class="selected-item-icon" id="selectedIcon"></div>
+            <div class="fw-bold" id="selectedName"></div>
+            <div class="item-id" id="selectedId"></div>
+          </div>
+
+          <label class="text-warning mb-2">👤 Jogador:</label>
+          <select id="playerSelect" class="player-select">
+            <option value="">Selecione um jogador...</option>
+          </select>
+
+          <label class="text-warning mb-2 mt-3">📦 Quantidade:</label>
+          <input 
+            type="number" 
+            id="quantityInput" 
+            class="quantity-input" 
+            value="1" 
+            min="1" 
+            max="9999"
+          />
+
+          <button id="dropBtn" class="drop-btn" disabled>
+            🎁 DROPAR ITEM
+          </button>
+
+          <div id="statusMessage"></div>
+
+          <div class="mt-4 p-3" style="background: rgba(255, 215, 0, 0.1); border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.3);">
+            <small class="text-warning">💡 Dica:</small>
+            <small class="d-block mt-2" style="color: rgba(255, 255, 255, 0.8);">
+              1. Selecione uma categoria<br>
+              2. Clique em um item<br>
+              3. Escolha o jogador<br>
+              4. Defina a quantidade<br>
+              5. Clique em "Dropar Item"
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let itemsData = null;
+    let selectedItem = null;
+    let players = [];
+    let currentCategory = null;
+
+    function logout() {
+      localStorage.removeItem('palworld_auth');
+      localStorage.removeItem('palworld_token');
+      localStorage.removeItem('userId');
+      window.location.href = '/login';
+    }
+
+    async function ensureAdmin() {
+      const isLoggedIn = localStorage.getItem('palworld_auth');
+      const token = localStorage.getItem('palworld_token');
+      
+      if (!isLoggedIn || !token) {
+        window.location.href = '/login';
+        return;
+      }
+
+      const res = await fetch('/api/admin/check', {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data?.error || 'Acesso negado. Configure ADMIN_USERNAMES.');
+        window.location.href = '/dashboard';
+        return;
+      }
+    }
+
+    async function loadItems() {
+      try {
+        const res = await fetch('/data/palworld-items.json');
+        itemsData = await res.json();
+        renderCategories();
+      } catch (error) {
+        console.error('Erro ao carregar itens:', error);
+        showStatus('Erro ao carregar catálogo de itens', 'error');
+      }
+    }
+
+    async function loadPlayers() {
+      const token = localStorage.getItem('palworld_token');
+      if (!token) return;
+
+      try {
+        const res = await fetch('/api/admin/online-players', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+        players = data.players || [];
+        
+        const select = document.getElementById('playerSelect');
+        select.innerHTML = '<option value="">Selecione um jogador...</option>';
+        
+        players.forEach(player => {
+          const option = document.createElement('option');
+          option.value = player.steamId;
+          option.textContent = `${player.name} (${player.steamId})`;
+          select.appendChild(option);
+        });
+
+        document.getElementById('onlinePlayers').textContent = 
+          `👥 ${players.length} jogador(es) online`;
+
+      } catch (error) {
+        console.error('Erro ao carregar jogadores:', error);
+      }
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('categories');
+      container.innerHTML = '';
+
+      Object.entries(itemsData.categories).forEach(([key, category]) => {
+        const btn = document.createElement('button');
+        btn.className = 'category-btn';
+        btn.innerHTML = `
+          <span>${category.name}</span>
+          <span class="category-count">${category.items.length}</span>
+        `;
+        btn.onclick = () => selectCategory(key);
+        container.appendChild(btn);
+      });
+
+      // Selecionar primeira categoria por padrão
+      if (Object.keys(itemsData.categories).length > 0) {
+        selectCategory(Object.keys(itemsData.categories)[0]);
+      }
+    }
+
+    function selectCategory(categoryKey) {
+      currentCategory = categoryKey;
+      
+      // Atualizar botões de categoria
+      document.querySelectorAll('.category-btn').forEach((btn, index) => {
+        btn.classList.toggle('active', index === Object.keys(itemsData.categories).indexOf(categoryKey));
+      });
+
+      renderItems(itemsData.categories[categoryKey].items);
+    }
+
+    function renderItems(items) {
+      const grid = document.getElementById('itemsGrid');
+      grid.innerHTML = '';
+
+      document.getElementById('itemCount').textContent = `${items.length} itens`;
+
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        card.innerHTML = `
+          <span class="item-icon">${item.icon}</span>
+          <div class="item-name">${item.name}</div>
+          <div class="item-id">${item.id}</div>
+        `;
+        card.onclick = () => selectItem(item);
+        grid.appendChild(card);
+      });
+    }
+
+    function selectItem(item) {
+      selectedItem = item;
+
+      // Atualizar cards
+      document.querySelectorAll('.item-card').forEach(card => {
+        card.classList.toggle('selected', card.querySelector('.item-id').textContent === item.id);
+      });
+
+      // Mostrar item selecionado
+      document.getElementById('selectedItemDisplay').style.display = 'block';
+      document.getElementById('selectedIcon').textContent = item.icon;
+      document.getElementById('selectedName').textContent = item.name;
+      document.getElementById('selectedId').textContent = item.id;
+
+      // Habilitar botão se jogador também estiver selecionado
+      updateDropButton();
+    }
+
+    function updateDropButton() {
+      const playerSelected = document.getElementById('playerSelect').value !== '';
+      const itemSelected = selectedItem !== null;
+      document.getElementById('dropBtn').disabled = !(playerSelected && itemSelected);
+    }
+
+    async function dropItem() {
+      const token = localStorage.getItem('palworld_token');
+      const steamId = document.getElementById('playerSelect').value;
+      const quantity = parseInt(document.getElementById('quantityInput').value);
+
+      if (!token || !steamId || !selectedItem) return;
+
+      const payload = {
+        playerUserId: steamId,
+        item: selectedItem.id,
+        quantity: quantity,
+      };
+
+      try {
+        showStatus('Enviando item...', 'success');
+
+        const res = await fetch('/api/admin/drop-item', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          showStatus(data?.error || 'Falha ao dropar item', 'error');
+          return;
+        }
+
+        showStatus(`✅ ${selectedItem.name} x${quantity} enviado com sucesso!`, 'success');
+
+      } catch (error) {
+        console.error('Erro ao dropar item:', error);
+        showStatus('Erro ao enviar item', 'error');
+      }
+    }
+
+    function showStatus(message, type) {
+      const statusDiv = document.getElementById('statusMessage');
+      statusDiv.className = `status-message status-${type}`;
+      statusDiv.textContent = message;
+      statusDiv.style.display = 'block';
+
+      setTimeout(() => {
+        statusDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    // Busca de itens
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchBox = document.getElementById('searchBox');
+      searchBox.addEventListener('input', (e) => {
+        const search = e.target.value.toLowerCase();
+        
+        if (!currentCategory || !itemsData) return;
+
+        const items = itemsData.categories[currentCategory].items;
+        const filtered = items.filter(item => 
+          item.name.toLowerCase().includes(search) ||
+          item.id.toLowerCase().includes(search)
+        );
+
+        renderItems(filtered);
+      });
+
+      document.getElementById('playerSelect').addEventListener('change', updateDropButton);
+      document.getElementById('dropBtn').addEventListener('click', dropItem);
+    });
+
+    // Inicialização
+    window.onload = async function() {
+      await ensureAdmin();
+      await loadItems();
+      await loadPlayers();
+      setInterval(loadPlayers, 10000); // Atualizar jogadores a cada 10s
+    };
+  </script>
+</body>
+</html>

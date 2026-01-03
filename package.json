@@ -5,18 +5,32 @@
   "main": "index.html",
   "scripts": {
     "dev": "npx serve .",
-    "build": "npx tsc",
-    "start": "npx serve ."
+    "dev:vercel": "vercel dev",
+    "dev:static": "npx serve .",
+    "build": "node ./node_modules/typescript/bin/tsc && npx prisma generate",
+    "start": "npx serve .",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:studio": "npx prisma studio"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
+    "jsonwebtoken": "^9.0.3",
+    "msgpack5": "^6.0.2",
     "next": "^16.1.1",
-    "prisma": "^7.2.0"
+    "pg": "^8.13.1",
+    "prisma": "^7.2.0",
+    "rcon-client": "^4.2.5",
+    "zod": "^4.3.4"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.0.3",
+    "@types/pg": "^8.11.10",
     "serve": "^14.2.5",
     "typescript": "^5.9.3"
   },

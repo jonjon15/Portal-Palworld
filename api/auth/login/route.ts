@@ -1,77 +1,91 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-const { PrismaClient } = require('../../../src/generated/client');
+import { prisma } from '../../../lib/prisma';
+import { loginSchema } from '../../../lib/validations';
+import { generateToken } from '../../../lib/jwt';
+import { getCorsHeadersForNext } from '../../../lib/cors';
 
-const prisma = new PrismaClient();
+const noCacheHeaders = {
+  'Cache-Control': 'no-cache, no-store, must-revalidate',
+  'Pragma': 'no-cache',
+  'Expires': '0',
+};
 
 export async function POST(request: NextRequest) {
-  const prisma = new PrismaClient();
   try {
-    const body = await request.json() as { username: string; password: string };
-    const { username, password } = body;
-
-    if (!username || !password) {
-      return NextResponse.json({ error: 'Usuário e senha são obrigatórios.' }, { 
-        status: 400,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-      });
+    const cors = getCorsHeadersForNext(request);
+    if (cors.blocked) {
+      return NextResponse.json({ error: 'Origin não permitido (CORS).' }, { status: 403, headers: cors.headers });
     }
 
-    // Buscar usuário
+    const body = await request.json();
+
+    // Validar dados de entrada
+    const validation = loginSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: validation.error.issues[0].message },
+        { status: 400, headers: { ...noCacheHeaders, ...cors.headers } }
+      );
+    }
+
+    const { username, password } = validation.data;
+
+    // Buscar usuário com jogador associado
     const user = await prisma.user.findUnique({
       where: { username },
+      include: {
+        player: true,
+      },
     });
 
     if (!user) {
-      return NextResponse.json({ error: 'Usuário ou senha inválidos.' }, { 
-        status: 401,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-      });
+      return NextResponse.json(
+        { error: 'Usuário ou senha inválidos.' },
+        { status: 401, headers: { ...noCacheHeaders, ...cors.headers } }
+      );
     }
 
     // Verificar senha
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      return NextResponse.json({ error: 'Usuário ou senha inválidos.' }, { 
-        status: 401,
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-      });
+      return NextResponse.json(
+        { error: 'Usuário ou senha inválidos.' },
+        { status: 401, headers: { ...noCacheHeaders, ...cors.headers } }
+      );
     }
 
-    // Aqui você pode gerar um token JWT ou usar sessões
-    // Por simplicidade, retornamos sucesso e o userId
-    return NextResponse.json({ message: 'Login bem-sucedido.', userId: user.id }, { 
-      status: 200,
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-      },
+    // Gerar token JWT
+    const token = generateToken({
+      userId: user.id,
+      username: user.username,
     });
+
+    return NextResponse.json(
+      {
+        message: 'Login bem-sucedido.',
+        userId: user.id,
+        username: user.username,
+        playerName: user.player?.name,
+        playerId: user.player?.id,
+        token,
+      },
+      { status: 200, headers: { ...noCacheHeaders, ...cors.headers } }
+    );
   } catch (error) {
     console.error('Erro ao fazer login:', error);
-    return NextResponse.json({ error: 'Erro interno do servidor.' }, { 
-      status: 500,
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-      },
-    });
-  } finally {
-    await prisma.$disconnect();
+    return NextResponse.json(
+      { error: 'Erro interno do servidor.' },
+      { status: 500, headers: noCacheHeaders }
+    );
   }
+}
+
+export async function OPTIONS(request: NextRequest) {
+  const cors = getCorsHeadersForNext(request);
+  if (cors.blocked) {
+    return NextResponse.json({ error: 'Origin não permitido (CORS).' }, { status: 403, headers: cors.headers });
+  }
+  return new NextResponse(null, { status: 204, headers: cors.headers });
 }

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Palworld - Mapa</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    .navbar {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .map-wrap {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .map-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      user-select: none;
+      pointer-events: none;
+    }
+    .map-marker {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: none;
+      pointer-events: none;
+    }
+
+    .map-marker .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 9999px;
+      background: #dc3545;
+      border: 2px solid #fff;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    .map-marker .label {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #111;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .markers-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/dashboard">Portal Palworld</a>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-light" href="/dashboard">Voltar</a>
+        <button class="btn btn-danger" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="card p-3">
+          <div class="map-wrap" id="mapWrap">
+            <img class="map-img" src="/map/palworld-map.png" alt="Mapa Palworld" />
+             <div class="markers-layer" id="markersLayer"></div>
+          </div>
+          <div class="mt-3 text-muted small">
+             Este mapa mostra os jogadores <strong>online</strong> usando somente coordenadas reais retornadas pela API do servidor.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card p-3">
+           <h5 class="mb-3">Jogadores online</h5>
+
+          <div class="d-grid gap-2">
+             <button class="btn btn-primary" id="btnSync">Atualizar jogadores online</button>
+          </div>
+
+          <div class="mt-3">
+            <div id="status" class="small text-muted"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Bounds extraídos do mapa do palworld.th.gl (tilesConfig.default.options.bounds)
+    // Isso permite mapear coordenadas "world" (ex.: [267940, -358785, 7910]) diretamente para a imagem.
+    const WORLD_BOUNDS = {
+      // No th.gl os bounds vêm como [[minY, minX], [maxY, maxX]]
+      // Fonte: tilesConfig.default.options.bounds
+      minX: -735919,
+      maxX: 711919,
+      minY: -1000219,
+      maxY: 447619,
+    };
+
+    function logout() {
+      localStorage.removeItem('palworld_auth');
+      localStorage.removeItem('palworld_token');
+      localStorage.removeItem('userId');
+      window.location.href = '/login';
+    }
+
+    function setStatus(text) {
+      const el = document.getElementById('status');
+      el.textContent = text || '';
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function worldToPercent(x, y) {
+      const spanX = WORLD_BOUNDS.maxX - WORLD_BOUNDS.minX;
+      const spanY = WORLD_BOUNDS.maxY - WORLD_BOUNDS.minY;
+
+      const px = ((x - WORLD_BOUNDS.minX) / spanX) * 100;
+      const py = ((WORLD_BOUNDS.maxY - y) / spanY) * 100; // inverte Y (topo = norte)
+      return { px: clamp(px, 0, 100), py: clamp(py, 0, 100) };
+    }
+
+    function apiToWorld(apiX, apiY) {
+      // A API costuma vir invertida em relação ao mapa do th.gl.
+      // Exemplo real:
+      // - th.gl: [267940, -358785]
+      // - API:   X=-357669, Y=268819
+      return { x: apiY, y: apiX };
+    }
+
+    function createMarkerElement(name) {
+      const el = document.createElement('div');
+      el.className = 'map-marker';
+
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+
+      const label = document.createElement('div');
+      label.className = 'label';
+      label.textContent = name || 'Jogador';
+
+      el.appendChild(dot);
+      el.appendChild(label);
+      return el;
+    }
+
+    function clearMarkers() {
+      const layer = document.getElementById('markersLayer');
+      layer.innerHTML = '';
+    }
+
+    function renderMarkers(players) {
+      clearMarkers();
+      const layer = document.getElementById('markersLayer');
+
+      if (!Array.isArray(players) || players.length === 0) {
+        setStatus('Nenhum jogador online.');
+        return;
+      }
+
+      let rendered = 0;
+      for (const p of players) {
+        const name = p?.name;
+        const apiX = p?.x;
+        const apiY = p?.y;
+        if (typeof apiX !== 'number' || typeof apiY !== 'number') continue;
+
+        const { x, y } = apiToWorld(apiX, apiY);
+        const { px, py } = worldToPercent(x, y);
+
+        const marker = createMarkerElement(name);
+        marker.style.left = px + '%';
+        marker.style.top = py + '%';
+        marker.style.display = 'block';
+        marker.title = `API X=${apiX}, API Y=${apiY} | Plot X=${x}, Plot Y=${y}`;
+
+        layer.appendChild(marker);
+        rendered++;
+      }
+
+      setStatus(`Online: ${rendered}`);
+    }
+
+    async function syncOnlinePlayers() {
+      const token = localStorage.getItem('palworld_token');
+      if (!token) {
+        window.location.href = '/login';
+        return;
+      }
+
+      setStatus('Atualizando jogadores online...');
+      const res = await fetch('/api/player/online', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        clearMarkers();
+        setStatus(data?.error || 'Falha ao buscar jogadores online.');
+        return;
+      }
+
+      renderMarkers(data?.players || []);
+    }
+
+    function ensureLoggedIn() {
+      const isLoggedIn = localStorage.getItem('palworld_auth');
+      if (!isLoggedIn) {
+        window.location.href = '/login';
+      }
+    }
+
+    window.onload = function () {
+      ensureLoggedIn();
+
+      document.getElementById('btnSync').addEventListener('click', () => {
+        syncOnlinePlayers().catch((e) => setStatus(e?.message || 'Falha ao sincronizar.'));
+      });
+
+      // Ao abrir, tenta buscar os jogadores online.
+      syncOnlinePlayers().catch(() => {
+        clearMarkers();
+      });
+
+      // Atualiza periodicamente para remover marcadores de quem saiu.
+      setInterval(() => {
+        syncOnlinePlayers().catch(() => {
+          clearMarkers();
+        });
+      }, 10_000);
+    };
+  </script>
+</body>
+</html>

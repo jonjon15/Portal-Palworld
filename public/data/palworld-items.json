@@ -1,0 +1,153 @@
+{
+  "categories": {
+    "resources": {
+      "name": "Recursos",
+      "items": [
+        { "id": "Stone", "name": "Pedra", "icon": "🪨" },
+        { "id": "Wood", "name": "Madeira", "icon": "🪵" },
+        { "id": "Fiber", "name": "Fibra", "icon": "🌾" },
+        { "id": "Paldium", "name": "Paldium", "icon": "💎" },
+        { "id": "Coal", "name": "Carvão", "icon": "⬛" },
+        { "id": "IronOre", "name": "Minério de Ferro", "icon": "⚫" },
+        { "id": "CopperOre", "name": "Minério de Cobre", "icon": "🟤" },
+        { "id": "GoldOre", "name": "Minério de Ouro", "icon": "🟡" },
+        { "id": "SulfurOre", "name": "Minério de Enxofre", "icon": "🟨" },
+        { "id": "QuartzOre", "name": "Minério de Quartzo", "icon": "⬜" },
+        { "id": "IronIngot", "name": "Lingote de Ferro", "icon": "🔩" },
+        { "id": "CopperIngot", "name": "Lingote de Cobre", "icon": "🟫" },
+        { "id": "GoldIngot", "name": "Lingote de Ouro", "icon": "🪙" },
+        { "id": "RefinedIngot", "name": "Lingote Refinado", "icon": "✨" },
+        { "id": "Charcoal", "name": "Carvão Vegetal", "icon": "⚫" },
+        { "id": "Gunpowder", "name": "Pólvora", "icon": "💥" },
+        { "id": "CementBag", "name": "Saco de Cimento", "icon": "🧱" }
+      ]
+    },
+    "weapons": {
+      "name": "Armas",
+      "items": [
+        { "id": "Bat", "name": "Bastão", "icon": "🏏" },
+        { "id": "Spear", "name": "Lança", "icon": "🔱" },
+        { "id": "Bow", "name": "Arco", "icon": "🏹" },
+        { "id": "Crossbow", "name": "Besta", "icon": "🏹" },
+        { "id": "HandGun", "name": "Pistola", "icon": "🔫" },
+        { "id": "Rifle_Default", "name": "Rifle", "icon": "🔫" },
+        { "id": "Shotgun", "name": "Escopeta", "icon": "🔫" },
+        { "id": "AssaultRifle_Default", "name": "Rifle de Assalto", "icon": "🔫" },
+        { "id": "Launcher_Default", "name": "Lança-Foguetes", "icon": "🚀" },
+        { "id": "FlameThrower", "name": "Lança-Chamas", "icon": "🔥" },
+        { "id": "LaserRifle", "name": "Rifle Laser", "icon": "⚡" },
+        { "id": "Pickaxe", "name": "Picareta", "icon": "⛏️" },
+        { "id": "Axe", "name": "Machado", "icon": "🪓" },
+        { "id": "Pickaxe_Tier_02", "name": "Picareta de Metal", "icon": "⛏️" },
+        { "id": "Axe_Tier_02", "name": "Machado de Metal", "icon": "🪓" },
+        { "id": "Pickaxe_Tier_03", "name": "Picareta Refinada", "icon": "⛏️" },
+        { "id": "Axe_Tier_03", "name": "Machado Refinado", "icon": "🪓" }
+      ]
+    },
+    "armor": {
+      "name": "Armaduras",
+      "items": [
+        { "id": "ClothArmor", "name": "Armadura de Pano", "icon": "👕" },
+        { "id": "CopperArmor", "name": "Armadura de Cobre", "icon": "🛡️" },
+        { "id": "IronArmor", "name": "Armadura de Ferro", "icon": "⚔️" },
+        { "id": "SteelArmor", "name": "Armadura de Aço", "icon": "🛡️" },
+        { "id": "Pal_MetalArmor", "name": "Armadura de Metal para Pal", "icon": "🛡️" },
+        { "id": "Head_001", "name": "Capacete", "icon": "⛑️" },
+        { "id": "Head_002", "name": "Capacete de Metal", "icon": "⛑️" },
+        { "id": "Head_003", "name": "Capacete de Aço", "icon": "⛑️" }
+      ]
+    },
+    "consumables": {
+      "name": "Consumíveis",
+      "items": [
+        { "id": "BerryJuice", "name": "Suco de Frutas", "icon": "🧃" },
+        { "id": "Bread", "name": "Pão", "icon": "🍞" },
+        { "id": "Stew", "name": "Ensopado", "icon": "🍲" },
+        { "id": "Salad", "name": "Salada", "icon": "🥗" },
+        { "id": "Jam", "name": "Geleia", "icon": "🍯" },
+        { "id": "Cake", "name": "Bolo", "icon": "🎂" },
+        { "id": "Pizza", "name": "Pizza", "icon": "🍕" },
+        { "id": "Milk", "name": "Leite", "icon": "🥛" },
+        { "id": "Honey", "name": "Mel", "icon": "🍯" },
+        { "id": "Egg", "name": "Ovo", "icon": "🥚" },
+        { "id": "RawMeat", "name": "Carne Crua", "icon": "🥩" },
+        { "id": "CookedMeat", "name": "Carne Cozida", "icon": "🍖" },
+        { "id": "HealthPotion", "name": "Poção de Vida", "icon": "🧪" },
+        { "id": "StaminaPotion", "name": "Poção de Stamina", "icon": "⚡" },
+        { "id": "MedicalSupplies", "name": "Suprimentos Médicos", "icon": "💊" },
+        { "id": "LowGradeMedicalSupplies", "name": "Suprimentos Médicos Baixos", "icon": "💊" },
+        { "id": "HighGradeMedicalSupplies", "name": "Suprimentos Médicos Altos", "icon": "💊" }
+      ]
+    },
+    "spheres": {
+      "name": "Esferas",
+      "items": [
+        { "id": "PalSphere", "name": "Pal Sphere", "icon": "⚪" },
+        { "id": "MegaSphere", "name": "Mega Sphere", "icon": "🔵" },
+        { "id": "GigaSphere", "name": "Giga Sphere", "icon": "🟣" },
+        { "id": "HyperSphere", "name": "Hyper Sphere", "icon": "🔴" },
+        { "id": "UltraSphere", "name": "Ultra Sphere", "icon": "🟡" },
+        { "id": "LegendarySphere", "name": "Legendary Sphere", "icon": "🌟" }
+      ]
+    },
+    "ammo": {
+      "name": "Munição",
+      "items": [
+        { "id": "Arrow", "name": "Flecha", "icon": "➡️" },
+        { "id": "FireArrow", "name": "Flecha de Fogo", "icon": "🔥" },
+        { "id": "PoisonArrow", "name": "Flecha Venenosa", "icon": "☢️" },
+        { "id": "Bullet", "name": "Bala", "icon": "🔸" },
+        { "id": "RifleBullet", "name": "Bala de Rifle", "icon": "🔹" },
+        { "id": "ShotgunShell", "name": "Cartucho de Escopeta", "icon": "🔻" },
+        { "id": "Rocket", "name": "Foguete", "icon": "🚀" },
+        { "id": "ExplosiveBullet", "name": "Bala Explosiva", "icon": "💥" }
+      ]
+    },
+    "materials": {
+      "name": "Materiais",
+      "items": [
+        { "id": "Leather", "name": "Couro", "icon": "🦌" },
+        { "id": "Cloth", "name": "Tecido", "icon": "🧵" },
+        { "id": "Bone", "name": "Osso", "icon": "🦴" },
+        { "id": "Horn", "name": "Chifre", "icon": "🦏" },
+        { "id": "Wool", "name": "Lã", "icon": "🐑" },
+        { "id": "FireOrgan", "name": "Órgão de Fogo", "icon": "🔥" },
+        { "id": "IceOrgan", "name": "Órgão de Gelo", "icon": "❄️" },
+        { "id": "ElectricOrgan", "name": "Órgão Elétrico", "icon": "⚡" },
+        { "id": "AncientCivilizationParts", "name": "Peças de Civilização Antiga", "icon": "🏛️" },
+        { "id": "PalFluid", "name": "Fluido Pal", "icon": "💧" },
+        { "id": "HighQualityPalOil", "name": "Óleo Pal de Alta Qualidade", "icon": "🛢️" }
+      ]
+    },
+    "building": {
+      "name": "Construção",
+      "items": [
+        { "id": "WoodWall", "name": "Parede de Madeira", "icon": "🪵" },
+        { "id": "StoneWall", "name": "Parede de Pedra", "icon": "🧱" },
+        { "id": "MetalWall", "name": "Parede de Metal", "icon": "🏗️" },
+        { "id": "WoodFoundation", "name": "Fundação de Madeira", "icon": "🪵" },
+        { "id": "StoneFoundation", "name": "Fundação de Pedra", "icon": "🧱" },
+        { "id": "MetalFoundation", "name": "Fundação de Metal", "icon": "🏗️" },
+        { "id": "WoodDoor", "name": "Porta de Madeira", "icon": "🚪" },
+        { "id": "StoneDoor", "name": "Porta de Pedra", "icon": "🚪" },
+        { "id": "MetalDoor", "name": "Porta de Metal", "icon": "🚪" },
+        { "id": "Chest", "name": "Baú", "icon": "📦" },
+        { "id": "Bed", "name": "Cama", "icon": "🛏️" },
+        { "id": "Campfire", "name": "Fogueira", "icon": "🔥" },
+        { "id": "CookingPot", "name": "Panela de Cozinha", "icon": "🍲" }
+      ]
+    },
+    "special": {
+      "name": "Especiais",
+      "items": [
+        { "id": "GoldCoin", "name": "Moeda de Ouro", "icon": "🪙" },
+        { "id": "TechnologyPoints", "name": "Pontos de Tecnologia", "icon": "🔬" },
+        { "id": "AncientTechnologyPoints", "name": "Pontos de Tecnologia Antiga", "icon": "🏛️" },
+        { "id": "SchematicsBook", "name": "Livro de Esquemas", "icon": "📖" },
+        { "id": "RandomSkillFruit", "name": "Fruta de Habilidade Aleatória", "icon": "🍎" },
+        { "id": "MemoryWipingMedicine", "name": "Medicamento de Apagamento de Memória", "icon": "💊" },
+        { "id": "BeautifulFlower", "name": "Flor Bonita", "icon": "🌸" }
+      ]
+    }
+  }
+}

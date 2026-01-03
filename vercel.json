@@ -1,39 +1,24 @@
 {
-  "version": 2,
-  "builds": [
+  "redirects": [
     {
-      "src": "dist/api/**/*.js",
-      "use": "@vercel/node"
+      "source": "/login",
+      "destination": "/login.html"
     },
     {
-      "src": "public/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/dist/api/$1"
+      "source": "/register",
+      "destination": "/register.html"
     },
     {
-      "src": "/",
-      "dest": "/public/index.html"
+      "source": "/dashboard",
+      "destination": "/dashboard.html"
     },
     {
-      "src": "/login",
-      "dest": "/public/login.html"
+      "source": "/map",
+      "destination": "/map.html"
     },
     {
-      "src": "/register",
-      "dest": "/public/register.html"
-    },
-    {
-      "src": "/dashboard",
-      "dest": "/public/dashboard.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/public/$1"
+      "source": "/admin",
+      "destination": "/admin.html"
     }
   ]
 }

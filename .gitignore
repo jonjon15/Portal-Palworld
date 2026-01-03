@@ -1,5 +1,14 @@
 node_modules/
 
 .vercel
+.env
+.env.*
+!.env.example
 .env*.local
 .next
+
+dist/
+
+# prisma generated clients
+generated/
+prisma/generated/

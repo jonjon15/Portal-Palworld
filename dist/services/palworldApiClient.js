@@ -3,49 +3,91 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.palworldApiClient = void 0;
 exports.getPlayersFromAPI = getPlayersFromAPI;
+exports.findApiPlayerByName = findApiPlayerByName;
 exports.getServerInfo = getServerInfo;
 exports.getOnlinePlayersCount = getOnlinePlayersCount;
 const axios_1 = __importDefault(require("axios"));
-const PALWORLD_API_URL = process.env.PALWORLD_API_URL || process.env.PALGUARD_URL || 'http://localhost:8212';
-const PALWORLD_API_USER = process.env.PALWORLD_API_USER || process.env.PALGUARD_USER || 'admin';
-const PALWORLD_API_PASS = process.env.PALWORLD_API_PASS || process.env.PALGUARD_PASSWORD || 'senha';
-if (!PALWORLD_API_URL || !PALWORLD_API_USER || !PALWORLD_API_PASS) {
-    throw new Error('Palworld API credentials are not set in environment variables.');
+function formatPalworldApiError(error) {
+    if (axios_1.default.isAxiosError(error)) {
+        const status = error.response?.status;
+        if (status === 401 || status === 403) {
+            return 'Palworld API não autorizada (verifique PALWORLD_API_USER/PALWORLD_API_PASS).';
+        }
+        if (status) {
+            return `Falha ao acessar Palworld API (HTTP ${status}).`;
+        }
+        return 'Falha ao acessar Palworld API (rede/timeout/DNS).';
+    }
+    return 'Falha ao acessar Palworld API.';
 }
-exports.palworldApiClient = axios_1.default.create({
-    baseURL: PALWORLD_API_URL,
-    auth: {
-        username: PALWORLD_API_USER,
-        password: PALWORLD_API_PASS,
-    },
-});
+function getPalworldApiClient() {
+    const baseURL = (process.env.PALWORLD_API_URL || process.env.PALGUARD_URL || 'http://201.93.248.252:8212').trim();
+    const username = (process.env.PALWORLD_API_USER || process.env.PALGUARD_USER || '').trim();
+    const password = (process.env.PALWORLD_API_PASS || process.env.PALGUARD_PASSWORD || '').trim();
+    if (!username || !password) {
+        throw new Error('PALWORLD_API_USER/PALWORLD_API_PASS não estão definidos nas variáveis de ambiente.');
+    }
+    return axios_1.default.create({
+        baseURL,
+        auth: {
+            username,
+            password,
+        },
+    });
+}
+function normalizePlayersResponse(data) {
+    if (!data) {
+        return [];
+    }
+    if (Array.isArray(data)) {
+        return data;
+    }
+    if (typeof data === 'object') {
+        const players = data.players;
+        if (Array.isArray(players)) {
+            return players;
+        }
+    }
+    return [];
+}
 // Funções para integração com PalDefender/PalGuard API
 async function getPlayersFromAPI() {
     try {
-        const response = await exports.palworldApiClient.get('/v1/api/players');
-        return response.data;
+        const palworldApiClient = getPalworldApiClient();
+        const response = await palworldApiClient.get('/v1/api/players');
+        return normalizePlayersResponse(response.data);
     }
     catch (error) {
-        console.error('Erro ao buscar jogadores da API:', error);
-        return [];
+        const message = formatPalworldApiError(error);
+        console.error('Erro ao buscar jogadores da API REST:', message);
+        throw new Error(message);
     }
+}
+async function findApiPlayerByName(playerName) {
+    const players = await getPlayersFromAPI();
+    const normalizedName = playerName.toLowerCase();
+    return players.find((player) => {
+        const candidate = player.name || player.accountName;
+        return candidate ? candidate.toLowerCase() === normalizedName : false;
+    }) || null;
 }
 async function getServerInfo() {
     try {
-        const response = await exports.palworldApiClient.get('/v1/api/server');
+        const palworldApiClient = getPalworldApiClient();
+        const response = await palworldApiClient.get('/v1/api/server');
         return response.data;
     }
     catch (error) {
-        console.error('Erro ao buscar informações do servidor:', error);
-        return null;
+        const message = formatPalworldApiError(error);
+        console.error('Erro ao buscar informações do servidor:', message);
+        throw new Error(message);
     }
 }
 async function getOnlinePlayersCount() {
     try {
         const players = await getPlayersFromAPI();
-        return Array.isArray(players) ? players.length : 0;
+        return players.length;
     }
     catch (error) {
         console.error('Erro ao contar jogadores online:', error);

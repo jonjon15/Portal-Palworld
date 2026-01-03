@@ -34,7 +34,10 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="#">Portal Palworld</a>
-            <button class="btn btn-logout" onclick="logout()">Sair</button>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-white" id="userInfo"></span>
+                <button class="btn btn-logout" onclick="logout()">Sair</button>
+            </div>
         </div>
     </nav>
 
@@ -51,7 +54,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">Mapa</h5>
                         <p class="card-text">Explore o mapa do jogo</p>
-                        <a href="#" class="btn btn-primary">Ver Mapa</a>
+                        <a href="/map" class="btn btn-primary">Ver Mapa</a>
                     </div>
                 </div>
             </div>
@@ -75,21 +78,65 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-4" id="adminCard" style="display:none;">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">🎮 Creative Menu</h5>
+                        <p class="card-text">Catálogo visual de itens do Palworld</p>
+                        <a href="/creative-menu.html" class="btn btn-warning mb-2 w-100">🎨 Creative Menu</a>
+                        <a href="/admin.html" class="btn btn-outline-danger w-100">📋 Admin Clássico</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Verificar se está logado
-        window.onload = function() {
+        // Verificar se está logado e mostrar informações do usuário
+        window.onload = async function() {
             const isLoggedIn = localStorage.getItem('palworld_auth');
-            if (!isLoggedIn) {
+            const token = localStorage.getItem('palworld_token');
+            
+            if (!isLoggedIn || !token) {
                 window.location.href = '/login';
+                return;
+            }
+
+            // Mostrar informações do usuário
+            const username = localStorage.getItem('username');
+            const playerName = localStorage.getItem('playerName');
+            const userInfoEl = document.getElementById('userInfo');
+            
+            if (playerName) {
+                userInfoEl.textContent = `Jogador: ${playerName} (${username})`;
+            } else {
+                userInfoEl.textContent = `Usuário: ${username}`;
+            }
+
+            // Verificar se é admin
+            try {
+                const res = await fetch('/api/admin/check', {
+                    method: 'GET',
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                
+                if (res.ok) {
+                    document.getElementById('adminCard').style.display = 'block';
+                }
+            } catch (e) {
+                // Não é admin ou erro - não mostra o card
+                console.log('Não é admin ou erro ao verificar:', e);
             }
         };
 
         function logout() {
             localStorage.removeItem('palworld_auth');
+            localStorage.removeItem('palworld_token');
             localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            localStorage.removeItem('playerName');
+            localStorage.removeItem('playerId');
             window.location.href = '/login';
         }
     </script>

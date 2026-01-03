@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Player
@@ -28,86 +28,112 @@ export type AggregatePlayer = {
 
 export type PlayerAvgAggregateOutputType = {
   id: number | null
+  level: number | null
   x: number | null
   y: number | null
   z: number | null
+  userId: number | null
 }
 
 export type PlayerSumAggregateOutputType = {
   id: number | null
+  level: number | null
   x: number | null
   y: number | null
   z: number | null
+  userId: number | null
 }
 
 export type PlayerMinAggregateOutputType = {
   id: number | null
   name: string | null
+  level: number | null
   x: number | null
   y: number | null
   z: number | null
+  userId: number | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PlayerMaxAggregateOutputType = {
   id: number | null
   name: string | null
+  level: number | null
   x: number | null
   y: number | null
   z: number | null
+  userId: number | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PlayerCountAggregateOutputType = {
   id: number
   name: number
+  level: number
   x: number
   y: number
   z: number
+  userId: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
 
 export type PlayerAvgAggregateInputType = {
   id?: true
+  level?: true
   x?: true
   y?: true
   z?: true
+  userId?: true
 }
 
 export type PlayerSumAggregateInputType = {
   id?: true
+  level?: true
   x?: true
   y?: true
   z?: true
+  userId?: true
 }
 
 export type PlayerMinAggregateInputType = {
   id?: true
   name?: true
+  level?: true
   x?: true
   y?: true
   z?: true
+  userId?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type PlayerMaxAggregateInputType = {
   id?: true
   name?: true
+  level?: true
   x?: true
   y?: true
   z?: true
+  userId?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type PlayerCountAggregateInputType = {
   id?: true
   name?: true
+  level?: true
   x?: true
   y?: true
   z?: true
+  userId?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -200,10 +226,13 @@ export type PlayerGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 export type PlayerGroupByOutputType = {
   id: number
   name: string
+  level: number
   x: number
   y: number
   z: number
+  userId: number
   createdAt: Date
+  updatedAt: Date
   _count: PlayerCountAggregateOutputType | null
   _avg: PlayerAvgAggregateOutputType | null
   _sum: PlayerSumAggregateOutputType | null
@@ -232,40 +261,55 @@ export type PlayerWhereInput = {
   NOT?: Prisma.PlayerWhereInput | Prisma.PlayerWhereInput[]
   id?: Prisma.IntFilter<"Player"> | number
   name?: Prisma.StringFilter<"Player"> | string
+  level?: Prisma.IntFilter<"Player"> | number
   x?: Prisma.FloatFilter<"Player"> | number
   y?: Prisma.FloatFilter<"Player"> | number
   z?: Prisma.FloatFilter<"Player"> | number
+  userId?: Prisma.IntFilter<"Player"> | number
   createdAt?: Prisma.DateTimeFilter<"Player"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Player"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type PlayerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   x?: Prisma.SortOrder
   y?: Prisma.SortOrder
   z?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PlayerWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  userId?: number
   AND?: Prisma.PlayerWhereInput | Prisma.PlayerWhereInput[]
   OR?: Prisma.PlayerWhereInput[]
   NOT?: Prisma.PlayerWhereInput | Prisma.PlayerWhereInput[]
   name?: Prisma.StringFilter<"Player"> | string
+  level?: Prisma.IntFilter<"Player"> | number
   x?: Prisma.FloatFilter<"Player"> | number
   y?: Prisma.FloatFilter<"Player"> | number
   z?: Prisma.FloatFilter<"Player"> | number
   createdAt?: Prisma.DateTimeFilter<"Player"> | Date | string
-}, "id">
+  updatedAt?: Prisma.DateTimeFilter<"Player"> | Date | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+}, "id" | "userId">
 
 export type PlayerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   x?: Prisma.SortOrder
   y?: Prisma.SortOrder
   z?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.PlayerCountOrderByAggregateInput
   _avg?: Prisma.PlayerAvgOrderByAggregateInput
   _max?: Prisma.PlayerMaxOrderByAggregateInput
@@ -279,115 +323,184 @@ export type PlayerScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PlayerScalarWhereWithAggregatesInput | Prisma.PlayerScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Player"> | number
   name?: Prisma.StringWithAggregatesFilter<"Player"> | string
+  level?: Prisma.IntWithAggregatesFilter<"Player"> | number
   x?: Prisma.FloatWithAggregatesFilter<"Player"> | number
   y?: Prisma.FloatWithAggregatesFilter<"Player"> | number
   z?: Prisma.FloatWithAggregatesFilter<"Player"> | number
+  userId?: Prisma.IntWithAggregatesFilter<"Player"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Player"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Player"> | Date | string
 }
 
 export type PlayerCreateInput = {
   name: string
-  x: number
-  y: number
-  z: number
+  level?: number
+  x?: number
+  y?: number
+  z?: number
   createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutPlayerInput
 }
 
 export type PlayerUncheckedCreateInput = {
   id?: number
   name: string
-  x: number
-  y: number
-  z: number
+  level?: number
+  x?: number
+  y?: number
+  z?: number
+  userId: number
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PlayerUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   x?: Prisma.FloatFieldUpdateOperationsInput | number
   y?: Prisma.FloatFieldUpdateOperationsInput | number
   z?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   x?: Prisma.FloatFieldUpdateOperationsInput | number
   y?: Prisma.FloatFieldUpdateOperationsInput | number
   z?: Prisma.FloatFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PlayerCreateManyInput = {
   id?: number
   name: string
-  x: number
-  y: number
-  z: number
+  level?: number
+  x?: number
+  y?: number
+  z?: number
+  userId: number
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PlayerUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   x?: Prisma.FloatFieldUpdateOperationsInput | number
   y?: Prisma.FloatFieldUpdateOperationsInput | number
   z?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PlayerUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
   x?: Prisma.FloatFieldUpdateOperationsInput | number
   y?: Prisma.FloatFieldUpdateOperationsInput | number
   z?: Prisma.FloatFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PlayerNullableScalarRelationFilter = {
+  is?: Prisma.PlayerWhereInput | null
+  isNot?: Prisma.PlayerWhereInput | null
 }
 
 export type PlayerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   x?: Prisma.SortOrder
   y?: Prisma.SortOrder
   z?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PlayerAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   x?: Prisma.SortOrder
   y?: Prisma.SortOrder
   z?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type PlayerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   x?: Prisma.SortOrder
   y?: Prisma.SortOrder
   z?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PlayerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   x?: Prisma.SortOrder
   y?: Prisma.SortOrder
   z?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PlayerSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  level?: Prisma.SortOrder
   x?: Prisma.SortOrder
   y?: Prisma.SortOrder
   z?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type PlayerCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.PlayerCreateWithoutUserInput, Prisma.PlayerUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutUserInput
+  connect?: Prisma.PlayerWhereUniqueInput
+}
+
+export type PlayerUncheckedCreateNestedOneWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.PlayerCreateWithoutUserInput, Prisma.PlayerUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutUserInput
+  connect?: Prisma.PlayerWhereUniqueInput
+}
+
+export type PlayerUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.PlayerCreateWithoutUserInput, Prisma.PlayerUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutUserInput
+  upsert?: Prisma.PlayerUpsertWithoutUserInput
+  disconnect?: Prisma.PlayerWhereInput | boolean
+  delete?: Prisma.PlayerWhereInput | boolean
+  connect?: Prisma.PlayerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlayerUpdateToOneWithWhereWithoutUserInput, Prisma.PlayerUpdateWithoutUserInput>, Prisma.PlayerUncheckedUpdateWithoutUserInput>
+}
+
+export type PlayerUncheckedUpdateOneWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.PlayerCreateWithoutUserInput, Prisma.PlayerUncheckedCreateWithoutUserInput>
+  connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutUserInput
+  upsert?: Prisma.PlayerUpsertWithoutUserInput
+  disconnect?: Prisma.PlayerWhereInput | boolean
+  delete?: Prisma.PlayerWhereInput | boolean
+  connect?: Prisma.PlayerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlayerUpdateToOneWithWhereWithoutUserInput, Prisma.PlayerUpdateWithoutUserInput>, Prisma.PlayerUncheckedUpdateWithoutUserInput>
 }
 
 export type FloatFieldUpdateOperationsInput = {
@@ -398,16 +511,62 @@ export type FloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
+export type PlayerCreateWithoutUserInput = {
+  name: string
+  level?: number
+  x?: number
+  y?: number
+  z?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type PlayerUncheckedCreateWithoutUserInput = {
+  id?: number
+  name: string
+  level?: number
+  x?: number
+  y?: number
+  z?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type PlayerCreateOrConnectWithoutUserInput = {
+  where: Prisma.PlayerWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlayerCreateWithoutUserInput, Prisma.PlayerUncheckedCreateWithoutUserInput>
+}
+
+export type PlayerUpsertWithoutUserInput = {
+  update: Prisma.XOR<Prisma.PlayerUpdateWithoutUserInput, Prisma.PlayerUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.PlayerCreateWithoutUserInput, Prisma.PlayerUncheckedCreateWithoutUserInput>
+  where?: Prisma.PlayerWhereInput
+}
+
+export type PlayerUpdateToOneWithWhereWithoutUserInput = {
+  where?: Prisma.PlayerWhereInput
+  data: Prisma.XOR<Prisma.PlayerUpdateWithoutUserInput, Prisma.PlayerUncheckedUpdateWithoutUserInput>
+}
+
+export type PlayerUpdateWithoutUserInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  x?: Prisma.FloatFieldUpdateOperationsInput | number
+  y?: Prisma.FloatFieldUpdateOperationsInput | number
+  z?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PlayerUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  x?: Prisma.FloatFieldUpdateOperationsInput | number
+  y?: Prisma.FloatFieldUpdateOperationsInput | number
+  z?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -415,51 +574,80 @@ export type IntFieldUpdateOperationsInput = {
 export type PlayerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  level?: boolean
   x?: boolean
   y?: boolean
   z?: boolean
+  userId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["player"]>
 
 export type PlayerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  level?: boolean
   x?: boolean
   y?: boolean
   z?: boolean
+  userId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["player"]>
 
 export type PlayerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  level?: boolean
   x?: boolean
   y?: boolean
   z?: boolean
+  userId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["player"]>
 
 export type PlayerSelectScalar = {
   id?: boolean
   name?: boolean
+  level?: boolean
   x?: boolean
   y?: boolean
   z?: boolean
+  userId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type PlayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "x" | "y" | "z" | "createdAt", ExtArgs["result"]["player"]>
+export type PlayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "level" | "x" | "y" | "z" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["player"]>
+export type PlayerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type PlayerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type PlayerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
 
 export type $PlayerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Player"
-  objects: {}
+  objects: {
+    user: Prisma.$UserPayload<ExtArgs>
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     name: string
+    level: number
     x: number
     y: number
     z: number
+    userId: number
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["player"]>
   composites: {}
 }
@@ -854,6 +1042,7 @@ readonly fields: PlayerFieldRefs;
  */
 export interface Prisma__PlayerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -885,10 +1074,13 @@ export interface Prisma__PlayerClient<T, Null = never, ExtArgs extends runtime.T
 export interface PlayerFieldRefs {
   readonly id: Prisma.FieldRef<"Player", 'Int'>
   readonly name: Prisma.FieldRef<"Player", 'String'>
+  readonly level: Prisma.FieldRef<"Player", 'Int'>
   readonly x: Prisma.FieldRef<"Player", 'Float'>
   readonly y: Prisma.FieldRef<"Player", 'Float'>
   readonly z: Prisma.FieldRef<"Player", 'Float'>
+  readonly userId: Prisma.FieldRef<"Player", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Player", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Player", 'DateTime'>
 }
     
 
@@ -905,6 +1097,10 @@ export type PlayerFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Player
    */
   omit?: Prisma.PlayerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerInclude<ExtArgs> | null
   /**
    * Filter, which Player to fetch.
    */
@@ -924,6 +1120,10 @@ export type PlayerFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.PlayerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerInclude<ExtArgs> | null
+  /**
    * Filter, which Player to fetch.
    */
   where: Prisma.PlayerWhereUniqueInput
@@ -941,6 +1141,10 @@ export type PlayerFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Player
    */
   omit?: Prisma.PlayerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerInclude<ExtArgs> | null
   /**
    * Filter, which Player to fetch.
    */
@@ -990,6 +1194,10 @@ export type PlayerFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.PlayerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerInclude<ExtArgs> | null
+  /**
    * Filter, which Player to fetch.
    */
   where?: Prisma.PlayerWhereInput
@@ -1038,6 +1246,10 @@ export type PlayerFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.PlayerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerInclude<ExtArgs> | null
+  /**
    * Filter, which Players to fetch.
    */
   where?: Prisma.PlayerWhereInput
@@ -1081,6 +1293,10 @@ export type PlayerCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.PlayerOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerInclude<ExtArgs> | null
+  /**
    * The data needed to create a Player.
    */
   data: Prisma.XOR<Prisma.PlayerCreateInput, Prisma.PlayerUncheckedCreateInput>
@@ -1114,6 +1330,10 @@ export type PlayerCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    */
   data: Prisma.PlayerCreateManyInput | Prisma.PlayerCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1128,6 +1348,10 @@ export type PlayerUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Player
    */
   omit?: Prisma.PlayerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerInclude<ExtArgs> | null
   /**
    * The data needed to update a Player.
    */
@@ -1180,6 +1404,10 @@ export type PlayerUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many Players to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1194,6 +1422,10 @@ export type PlayerUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Player
    */
   omit?: Prisma.PlayerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerInclude<ExtArgs> | null
   /**
    * The filter to search for the Player to update in case it exists.
    */
@@ -1220,6 +1452,10 @@ export type PlayerDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Player
    */
   omit?: Prisma.PlayerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerInclude<ExtArgs> | null
   /**
    * Filter which Player to delete.
    */
@@ -1252,4 +1488,8 @@ export type PlayerDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Player
    */
   omit?: Prisma.PlayerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayerInclude<ExtArgs> | null
 }
